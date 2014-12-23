@@ -10,14 +10,14 @@ Participating Developers:
 - Christian Yassa
 
 #Plan
-###Do By January 15:
+### Do By January 15:
 - Create Sprites
 - Deal With Basic Logic
 - Wireframe Basic UI
 - Prototype and Plan UX
-###Do By February 1:
+### Do By February 1:
 - Put Together Application (I know that's kind of a catch-all)
-###Do By February 15:
+### Do By February 15:
 - Do Basic User Interface Testing With Students and Mr. Risse
 - Refine UI and UX until satisfied
 - Submit To App Store
