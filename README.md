@@ -1,5 +1,5 @@
 #Free Body
-This is a free body physics simulator, made in Swift and SpriteKit, which was created for the purpose of making physics education at the high school level more intuitive. 
+This is a free body physics simulator, made in Swift and SpriteKit, which was created for the purpose of making physics education at the high school level more intuitive. We are targeting iPad users, beacuse of increased screen real estate and the availability to teacher, but will provide functionality to iPhone users as well.
 
 ##Creators
 Participating Developers:
