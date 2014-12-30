@@ -18,7 +18,6 @@
 		6BF48C521A48E4B500704E36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BF48C511A48E4B500704E36 /* Images.xcassets */; };
 		6BF48C551A48E4B500704E36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BF48C531A48E4B500704E36 /* LaunchScreen.xib */; };
 		6BF48C611A48E4B500704E36 /* FreeBodyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF48C601A48E4B500704E36 /* FreeBodyTests.swift */; };
-		7A0985F11A5352C10064CFB8 /* NodeOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0985F01A5352C10064CFB8 /* NodeOptions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,7 +46,6 @@
 		6BF48C5A1A48E4B500704E36 /* FreeBodyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreeBodyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BF48C5F1A48E4B500704E36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6BF48C601A48E4B500704E36 /* FreeBodyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeBodyTests.swift; sourceTree = "<group>"; };
-		7A0985F01A5352C10064CFB8 /* NodeOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeOptions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +91,6 @@
 				6BF48C481A48E4B500704E36 /* GameScene.sks */,
 				6BF48C4A1A48E4B500704E36 /* GameScene.swift */,
 				6BE02C021A533DB2009C9383 /* MainMenuScene.swift */,
-				7A0985F01A5352C10064CFB8 /* NodeOptions.swift */,
 				6BE02C061A534A65009C9383 /* TwoBodiesScene.swift */,
 				6BE02C041A534A33009C9383 /* OneBodyScene.swift */,
 				6BF48C4C1A48E4B500704E36 /* GameViewController.swift */,
@@ -232,7 +229,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A0985F11A5352C10064CFB8 /* NodeOptions.swift in Sources */,
 				6BF48C4B1A48E4B500704E36 /* GameScene.swift in Sources */,
 				6BF48C4D1A48E4B500704E36 /* GameViewController.swift in Sources */,
 				6BE02C031A533DB2009C9383 /* MainMenuScene.swift in Sources */,

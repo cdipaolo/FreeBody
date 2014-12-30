@@ -37,8 +37,8 @@ class OneBodyScene: SKScene {
         backText.text = "Main Menu"
 
         let back = SKShapeNode(rectOfSize: backText.frame.size)
-
-
+        back.addChild(backText)
+        
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
         options.fillColor = UIColorFromRGB(0xD49A6A)
