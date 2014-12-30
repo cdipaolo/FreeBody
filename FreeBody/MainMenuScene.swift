@@ -27,9 +27,6 @@ class MainMenuScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)
         
-        //let color = Colors()
-        let colorInt = Colors.color("yellow")
-        println(colorInt)
         
         let freeBodyLabel = SKLabelNode(fontNamed: "GillSans-Bold")
         freeBodyLabel.name = "freebody"
