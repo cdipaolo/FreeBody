@@ -34,10 +34,13 @@ class Colors{
                 let colorHex: UInt = 0xFF9D4B
                 return UIColorFromRGB(colorHex)
             case "blue":
-                let colorHex: UInt = 0xCAB033
+                let colorHex: UInt = 0x304374
                 return UIColorFromRGB(colorHex)
             case "blueDark":
                 let colorHex: UInt = 0x19367A
+                return UIColorFromRGB(colorHex)
+            case "brown":
+                let colorHex: UInt = 0xD49A6A
                 return UIColorFromRGB(colorHex)
             default:
                 println("Error: using default case for color- returning white")
