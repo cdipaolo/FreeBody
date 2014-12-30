@@ -19,20 +19,27 @@ class OneBodyScene: SKScene {
 
     override init(size: CGSize) {
         super.init(size: size)
-        node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
-        node!.fillColor = Colors.color("yellow")
-        node!.lineWidth = 0
-        node!.name = "Node"
 
-        node!.position = CGPointMake(self.size.width/2, self.size.height/2)
-        self.addChild(node!)
+        let node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
+        node.fillColor = Colors.color("yellow")
+        node.lineWidth = 0
+        node.name = "Node"
+        node.position = CGPointMake(self.size.width/2, self.size.height/2)
+        self.addChild(node)
 
-        options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
-        options!.fillColor = Colors.color("brown")
-        options!.position = CGPointMake(self.size.width*7/6, self.size.height/2)
-        options!.name = "Options"
-        options!.lineWidth = 0
-        self.addChild(options!)
+        let backText = SKLabelNode(fontNamed: "GillSans-Bold")
+        backText.text = "Main Menu"
+
+        let back = SKShapeNode(rectOfSize: backText.frame.size)
+        back.addChild(backText)
+        
+
+        let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
+        options.fillColor = Colors.color("brown")
+        options.position = CGPointMake(self.size.width*7/6, self.size.height/2)
+        options.name = "Options"
+        options.lineWidth = 0
+        self.addChild(options)
 
         self.name = "Background"
 
