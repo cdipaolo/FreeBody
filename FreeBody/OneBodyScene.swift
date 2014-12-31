@@ -84,17 +84,47 @@ class OneBodyScene: SKScene {
 
         if isRunning {
             startButton!.hidden = true
+            startButton?.zPosition--
             stopButton!.hidden = false
+            stopButton?.zPosition++
         }
         else {
             stopButton!.hidden = true
+            stopButton?.zPosition--
             startButton!.hidden = false
+            startButton?.zPosition++
+
+        }
+    }
+
+    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+        let touch = touches.anyObject() as UITouch
+        let nodeTouched = nodeAtPoint(touch.locationInNode(self))
+        if (nodeTouched.parent?.parent is FBButtonNode) {
+            (nodeTouched.parent!.parent as FBButtonNode).setTouched(true)
+        }
+    }
+
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        let touch = touches.anyObject() as UITouch
+
+        let nodeTouched = nodeAtPoint(touch.previousLocationInNode(self))
+
+        if (nodeTouched !== nodeAtPoint(touch.locationInNode(self))) {
+            if (nodeTouched.parent?.parent is FBButtonNode) {
+                (nodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+            }
         }
     }
 
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
         let nodeTouched = nodeAtPoint(touch.locationInNode(self))
+
+        if (nodeTouched.parent?.parent is FBButtonNode) {
+            (nodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+        }
+
         if (nodeTouched.name? != nil) {
             switch nodeTouched.name! {
             case "Node":
@@ -107,16 +137,16 @@ class OneBodyScene: SKScene {
                     (node as SKNode).physicsBody?.dynamic = isRunning
                 }
                 switchPlayButton()
-                
+
             case "Back":
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
             default:
                 println("Nothing Touched")
             }
         }
-
+        
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }

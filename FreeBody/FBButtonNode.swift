@@ -14,27 +14,44 @@ class FBButtonNode: SKSpriteNode {
         super.init(texture: texture, color: color, size: size)
     }
 
-    init(text:String, identifier:String, size:CGFloat) {
+    private var buttonText:SKLabelNode?
+    private var buttonBackground: SKShapeNode?
+    private var isButton:Bool?
+
+    init(text:String, identifier:String?, size:CGFloat) {
         super.init()
-        let buttonText = SKLabelNode(fontNamed: "GillSans-Bold")
-        buttonText.text = text
-        buttonText.fontColor = FBColors.YellowBright
-        buttonText.fontSize = size
-        buttonText.verticalAlignmentMode = .Center
+        isButton = (identifier != nil)
 
-        let buttonBackground = SKShapeNode(rectOfSize: CGSizeMake( buttonText.frame.size.width + 10, buttonText.frame.height + 10))
-        buttonBackground.fillColor = FBColors.Brown
-        buttonBackground.lineWidth = 0
+        buttonText = SKLabelNode(fontNamed: "GillSans-Bold")
+        buttonText!.text = text
+        buttonText!.fontColor = FBColors.YellowBright
+        buttonText!.fontSize = size
+        buttonText!.verticalAlignmentMode = .Center
 
-        let buttonResponder = SKSpriteNode(texture: nil, color: nil, size: buttonBackground.frame.size)
+        buttonBackground = SKShapeNode(rectOfSize: CGSizeMake( buttonText!.frame.size.width + 10, buttonText!.frame.height + 10))
+        buttonBackground!.fillColor = FBColors.Brown
+        buttonBackground!.strokeColor = FBColors.YellowBright
+        buttonBackground!.lineWidth = (identifier==nil) ? 0 : 1
+
+        let buttonResponder = SKSpriteNode(texture: nil, color: nil, size: buttonBackground!.frame.size)
         buttonResponder.name = identifier
 
-        buttonBackground.addChild(buttonText)
-        buttonBackground.addChild(buttonResponder)
+        buttonBackground!.addChild(buttonText!)
+        buttonBackground!.addChild(buttonResponder)
 
-        self.addChild(buttonBackground)
-        self.size = buttonBackground.frame.size
+        self.addChild(buttonBackground!)
+        self.size = buttonBackground!.frame.size
 
+    }
+
+    func setTouched(touch:Bool){
+        if touch && isButton! {
+            buttonText!.fontColor = FBColors.Yellow
+            buttonBackground?.strokeColor = FBColors.Yellow
+        } else {
+            buttonText!.fontColor = FBColors.YellowBright
+            buttonBackground?.strokeColor = FBColors.YellowBright
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

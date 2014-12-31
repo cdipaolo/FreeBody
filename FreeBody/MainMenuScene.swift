@@ -18,7 +18,7 @@ class MainMenuScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)
         
-        let freeBodyButton = FBButtonNode(text: "Free Body", identifier: "freebody", size: 100)
+        let freeBodyButton = FBButtonNode(text: "Free Body", identifier: nil, size: 100)
         freeBodyButton.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4)
         self.addChild(freeBodyButton)
 
@@ -31,10 +31,30 @@ class MainMenuScene: SKScene {
         self.addChild(twoBodiesButton)
         
     }
-    
+
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
-        
+        let nodeTouched = nodeAtPoint(touch.locationInNode(self))
+        if (nodeTouched.parent?.parent is FBButtonNode) {
+            (nodeTouched.parent!.parent as FBButtonNode).setTouched(true)
+        }
+    }
+
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        let touch = touches.anyObject() as UITouch
+
+        let nodeTouched = nodeAtPoint(touch.previousLocationInNode(self))
+
+        if (nodeTouched !== nodeAtPoint(touch.locationInNode(self))) {
+            if (nodeTouched.parent?.parent is FBButtonNode) {
+                (nodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+            }
+        }
+    }
+
+    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+        let touch = touches.anyObject() as UITouch
+
         if let nodeTouchedName = self.nodeAtPoint(touch.locationInNode(self)).name? {
             switch nodeTouchedName{
             case "onebody":
