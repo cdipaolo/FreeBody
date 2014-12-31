@@ -9,7 +9,9 @@
 import SpriteKit
 
 class OneBodyScene: SKScene {
+
     var isOptionVisible:Bool = false
+    var isRunning = false
 
     override func didMoveToView(view: SKView) {
         self.backgroundColor = FBColors.BlueDark
@@ -23,12 +25,26 @@ class OneBodyScene: SKScene {
         node.lineWidth = 0
         node.name = "Node"
         node.position = CGPointMake(self.size.width/2, self.size.height/2)
+        node.physicsBody = SKPhysicsBody(rectangleOfSize: node.frame.size)
+        node.physicsBody?.dynamic = false
         self.addChild(node)
 
         let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
         self.addChild(backButton)
         backButton.position = CGPointMake(backButton.size.width/2+backButton.size.height/2, backButton.size.height)
 
+
+        let startButton = FBButtonNode(text: "Start", identifier: "Start/Stop", size: 24)
+        startButton.name = "play"
+        addChild(startButton)
+        startButton.position = CGPointMake(startButton.size.width/2+startButton.size.height/2, self.size.height-startButton.size.height)
+
+        let stopButton = FBButtonNode(text: "Stop", identifier: "Start/Stop", size: 24)
+        stopButton.name = "pause"
+        addChild(stopButton)
+        stopButton.position = CGPointMake(stopButton.size.width/2+stopButton.size.height/2, self.size.height-stopButton.size.height)
+
+        switchPlayButton()
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
         options.fillColor = FBColors.Brown
@@ -61,6 +77,21 @@ class OneBodyScene: SKScene {
         }
     }
 
+    func switchPlayButton() {
+        let startButton = self.childNodeWithName("play")
+
+        let stopButton = self.childNodeWithName("pause")
+
+        if isRunning {
+            startButton!.hidden = true
+            stopButton!.hidden = false
+        }
+        else {
+            stopButton!.hidden = true
+            startButton!.hidden = false
+        }
+    }
+
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
         let nodeTouched = nodeAtPoint(touch.locationInNode(self))
@@ -70,6 +101,13 @@ class OneBodyScene: SKScene {
                 showOptionPane()
             case "Background":
                 hideOptionPane()
+            case "Start/Stop":
+                isRunning = !isRunning
+                for node in self.children {
+                    (node as SKNode).physicsBody?.dynamic = isRunning
+                }
+                switchPlayButton()
+                
             case "Back":
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
             default:
