@@ -9,25 +9,19 @@
 import SpriteKit
 
 class OneBodyScene: SKScene {
+    let node:SKShapeNode?
+    let options:SKShapeNode?
     var isOptionVisible:Bool = false
 
-    func UIColorFromRGB(rgbValue: UInt) -> UIColor {
-        return UIColor(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
-        )
-    }
-
     override func didMoveToView(view: SKView) {
-        self.backgroundColor = UIColorFromRGB(0x455E98)
+        self.backgroundColor = Colors.color("blue")
     }
 
     override init(size: CGSize) {
         super.init(size: size)
+
         let node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
-        node.fillColor = UIColorFromRGB(0xE3CB58)
+        node.fillColor = Colors.color("yellow")
         node.lineWidth = 0
         node.name = "Node"
         node.position = CGPointMake(self.size.width/2, self.size.height/2)
@@ -37,11 +31,11 @@ class OneBodyScene: SKScene {
         backText.text = "Main Menu"
 
         let back = SKShapeNode(rectOfSize: backText.frame.size)
-
-
+        back.addChild(backText)
+        
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
-        options.fillColor = UIColorFromRGB(0xD49A6A)
+        options.fillColor = Colors.color("brown")
         options.position = CGPointMake(self.size.width*7/6, self.size.height/2)
         options.name = "Options"
         options.lineWidth = 0
@@ -78,10 +72,12 @@ class OneBodyScene: SKScene {
             switch nodeTouched.name! {
             case "Node":
                 showOptionPane()
+            case "Options":
+                print()
             case "Background":
                 hideOptionPane()
             default:
-                println("Nothing Special Touched")
+                println("Nothing Touched")
             }
         }
 
