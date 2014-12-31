@@ -14,7 +14,7 @@ class OneBodyScene: SKScene {
     var isOptionVisible:Bool = false
 
     override func didMoveToView(view: SKView) {
-        self.backgroundColor = Colors.color("blue")
+        self.backgroundColor = FBColors.BlueDark
     }
 
     override init(size: CGSize) {
@@ -27,12 +27,10 @@ class OneBodyScene: SKScene {
         node.position = CGPointMake(self.size.width/2, self.size.height/2)
         self.addChild(node)
 
-        let backText = SKLabelNode(fontNamed: "GillSans-Bold")
-        backText.text = "Main Menu"
+        let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
+        self.addChild(backButton)
+        backButton.position = CGPointMake(backButton.size.width/2+backButton.size.height/2, backButton.size.height)
 
-        let back = SKShapeNode(rectOfSize: backText.frame.size)
-        back.addChild(backText)
-        
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
         options.fillColor = Colors.color("brown")
@@ -76,6 +74,8 @@ class OneBodyScene: SKScene {
                 print()
             case "Background":
                 hideOptionPane()
+            case "Back":
+                self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
             default:
                 println("Nothing Touched")
             }
@@ -84,6 +84,6 @@ class OneBodyScene: SKScene {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
 }

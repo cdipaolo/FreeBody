@@ -10,60 +10,25 @@ import SpriteKit
 
 
 class MainMenuScene: SKScene {
-    
-    func UIColorFromRGB(rgbValue: UInt) -> UIColor {
-        return UIColor(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
-        )
-    }
-    
+
     override func didMoveToView(view: SKView) {
-        self.backgroundColor = UIColorFromRGB(0x182C59)
+        self.backgroundColor = FBColors.BlueDark
     }
     
     override init(size: CGSize) {
         super.init(size: size)
         
-        
-        let freeBodyLabel = SKLabelNode(fontNamed: "GillSans-Bold")
-        freeBodyLabel.name = "freebody"
-        freeBodyLabel.fontSize = 100
-        freeBodyLabel.text = "Free Body"
-        freeBodyLabel.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4)
-        self.addChild(freeBodyLabel)
-        
-        let oneBodyLabel = SKLabelNode(fontNamed: "GillSans-Bold")
-        oneBodyLabel.fontColor = Colors.color("yellowBright")
-        oneBodyLabel.name = "onebody"
-        oneBodyLabel.fontSize = 60
-        oneBodyLabel.text = "One Body"
+        let freeBodyButton = FBButtonNode(text: "Free Body", identifier: "freebody", size: 100)
+        freeBodyButton.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4)
+        self.addChild(freeBodyButton)
 
-        
-        let oneBodyBox = SKShapeNode(rectOfSize: CGSizeMake(oneBodyLabel.frame.size.width+5, oneBodyLabel.frame.size.height+5))
-        oneBodyBox.fillColor = Colors.color("blueDark")
-        oneBodyBox.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4 - 100)
+        let oneBodyButton = FBButtonNode(text: "One Body", identifier: "onebody", size: 60)
+        oneBodyButton.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4 - 100)
+        self.addChild(oneBodyButton)
 
-        self.addChild(oneBodyBox)
-        oneBodyBox.addChild(oneBodyLabel)
-        oneBodyLabel.position = CGPointMake(0,-1*oneBodyLabel.parent!.frame.size.height/4)
-        
-        
-        let twoBodiesLabel = SKLabelNode(fontNamed: "GillSans-Bold")
-        twoBodiesLabel.fontColor = Colors.color("yellowBright")
-        twoBodiesLabel.name = "twobodies"
-        twoBodiesLabel.fontSize = 60
-        twoBodiesLabel.text = "Two Bodies"
-        
-        
-        let twoBodiesBox = SKShapeNode(rectOfSize: CGSizeMake(twoBodiesLabel.frame.size.width+5, twoBodiesLabel.frame.size.height+5))
-        twoBodiesBox.fillColor = Colors.color("blueDark")
-        twoBodiesBox.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4 - 180)
-        self.addChild(twoBodiesBox)
-        twoBodiesBox.addChild(twoBodiesLabel)
-        twoBodiesLabel.position = CGPointMake(0,-1*twoBodiesLabel.parent!.frame.size.height/2.5)
+        let twoBodiesButton = FBButtonNode(text: "Two Bodies", identifier: "twobodies", size: 60)
+        twoBodiesButton.position = CGPointMake(CGRectGetMidX(self.frame), self.frame.size.height*3/4 - 180)
+        self.addChild(twoBodiesButton)
         
     }
     
@@ -74,11 +39,11 @@ class MainMenuScene: SKScene {
             switch nodeTouchedName{
             case "onebody":
                 let oneBodyScene = OneBodyScene(size: self.size)
-                self.view?.presentScene(oneBodyScene)
+                self.view?.presentScene(oneBodyScene, transition: .doorsOpenHorizontalWithDuration(0.5))
                 println("Touched 'One Body' Label")
             case "twobodies":
                 let twoBodiesScene = TwoBodiesScene(size: self.size)
-                self.view?.presentScene(twoBodiesScene)
+                self.view?.presentScene(twoBodiesScene, transition: .doorsOpenHorizontalWithDuration(0.5))
                 println("Touched 'Two Bodies' Label")
             default:
                 println("Touched away from buttons")

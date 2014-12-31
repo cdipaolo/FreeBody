@@ -8,8 +8,18 @@
 
 import SpriteKit
 
+struct FBColors {
+    static let       Yellow = Colors.colorFromEnum(.Yellow)
+    static let YellowBright = Colors.colorFromEnum(.YellowBright)
+    static let       Orange = Colors.colorFromEnum(.Orange)
+    static let OrangeBright = Colors.colorFromEnum(.OrangeBright)
+    static let         Blue = Colors.colorFromEnum(.Blue)
+    static let     BlueDark = Colors.colorFromEnum(.BlueDark)
+    static let        Brown = Colors.colorFromEnum(.Brown)
+}
+
 class Colors{
-    
+
     class func UIColorFromRGB(rgbValue: UInt) -> UIColor {
         return UIColor(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
@@ -18,8 +28,45 @@ class Colors{
             alpha: CGFloat(1.0)
         )
     }
-    
-    class func color (colorString: String) -> UIColor{
+
+     enum colorValue {
+        case Yellow
+        case YellowBright
+        case Orange
+        case OrangeBright
+        case Blue
+        case BlueDark
+        case Brown
+    }
+
+
+    class func colorFromEnum (val:colorValue) -> UIColor {
+        switch val {
+        case .Yellow:
+            let colorHex: UInt = 0xCAB033
+            return UIColorFromRGB(colorHex)
+        case .YellowBright:
+            let colorHex: UInt = 0xFFF1AE
+            return UIColorFromRGB(colorHex)
+        case .Orange:
+            let colorHex: UInt = 0xCA7733
+            return UIColorFromRGB(colorHex)
+        case .OrangeBright:
+            let colorHex: UInt = 0xFF9D4B
+            return UIColorFromRGB(colorHex)
+        case .Blue:
+            let colorHex: UInt = 0x304374
+            return UIColorFromRGB(colorHex)
+        case .BlueDark:
+            let colorHex: UInt = 0x19367A
+            return UIColorFromRGB(colorHex)
+        case .Brown:
+            let colorHex: UInt = 0xD49A6A
+            return UIColorFromRGB(colorHex)
+        }
+    }
+
+    class func color (colorString:String) -> UIColor{
         switch colorString{
             case "yellow":
                 let colorHex: UInt = 0xCAB033
