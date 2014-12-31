@@ -9,8 +9,6 @@
 import SpriteKit
 
 class OneBodyScene: SKScene {
-    let node:SKShapeNode?
-    let options:SKShapeNode?
     var isOptionVisible:Bool = false
 
     override func didMoveToView(view: SKView) {
@@ -70,8 +68,6 @@ class OneBodyScene: SKScene {
             switch nodeTouched.name! {
             case "Node":
                 showOptionPane()
-            case "Options":
-                print()
             case "Background":
                 hideOptionPane()
             case "Back":
