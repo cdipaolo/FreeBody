@@ -2,7 +2,7 @@
 //  OneBodyScene.swift
 //  FreeBody
 //
-//  Created by Conner DiPaolo on 12/30/14.
+//  Created by Jackson Kearl on 12/30/14.
 //  Copyright (c) 2014 Applications of Computer Science Club. All rights reserved.
 //
 
@@ -21,7 +21,7 @@ class OneBodyScene: SKScene {
         super.init(size: size)
 
         let node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
-        node.fillColor = Colors.color("yellow")
+        node.fillColor = FBColors.Yellow
         node.lineWidth = 0
         node.name = "Node"
         node.position = CGPointMake(self.size.width/2, self.size.height/2)
@@ -33,7 +33,7 @@ class OneBodyScene: SKScene {
 
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
-        options.fillColor = Colors.color("brown")
+        options.fillColor = FBColors.Brown
         options.position = CGPointMake(self.size.width*7/6, self.size.height/2)
         options.name = "Options"
         options.lineWidth = 0
