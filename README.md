@@ -11,9 +11,9 @@ Participating Developers:
 #Plan
 
 ### Do By January 15:
-- Create Sprites
+- ~~Create Sprites~~
 
--~~Deal With Basic Logic~~
+-Deal With Basic Logic
 
 -~~Wireframe Basic UI~~
 
