@@ -28,7 +28,7 @@ class TwoBodiesScene: SKScene {
         addChild(nodeA)
 
         let nodeB = nodeA.copy() as SKShapeNode
-        nodeB.name = "nodeB"
+        nodeB.name = "NodeB"
         nodeB.position.y = self.size.height*2/3
         addChild(nodeB)
 
