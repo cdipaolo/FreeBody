@@ -12,6 +12,7 @@ class OneBodyScene: SKScene {
 
     var isOptionVisible:Bool = false
     var isRunning = false
+    let basePosition: CGPoint?
 
     override func didMoveToView(view: SKView) {
         self.backgroundColor = FBColors.BlueDark
@@ -19,15 +20,19 @@ class OneBodyScene: SKScene {
 
     override init(size: CGSize) {
         super.init(size: size)
+        
+        basePosition = CGPointMake(self.size.width/2, self.size.height/2)
 
         let node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
         node.fillColor = FBColors.Yellow
         node.lineWidth = 0
         node.name = "Node"
-        node.position = CGPointMake(self.size.width/2, self.size.height/2)
+        node.position = basePosition!
         node.physicsBody = SKPhysicsBody(rectangleOfSize: node.frame.size)
         node.physicsBody?.dynamic = false
         self.addChild(node)
+        
+
 
         let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
         self.addChild(backButton)
@@ -43,8 +48,7 @@ class OneBodyScene: SKScene {
         stopButton.name = "pause"
         addChild(stopButton)
         stopButton.position = CGPointMake(stopButton.size.width/2+stopButton.size.height/2, self.size.height-stopButton.size.height)
-
-        switchPlayButton()
+        stopButton.hidden = true
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
         options.fillColor = FBColors.Brown
@@ -78,15 +82,28 @@ class OneBodyScene: SKScene {
     }
 
     func switchPlayButton() {
+        isRunning = !isRunning
+        
         let startButton = self.childNodeWithName("play")
-
         let stopButton = self.childNodeWithName("pause")
 
         if isRunning {
+            // if physics is changed to running, start physics
+            for node in self.children {
+                (node as SKNode).physicsBody?.dynamic = isRunning
+            }
             startButton!.hidden = true
             stopButton!.hidden = false
         }
         else {
+            // Physics is changed to not running, turn it off! Move node to center
+            for node in self.children {
+                (node as SKNode).physicsBody?.dynamic = isRunning
+                if (node as SKNode).name=="Node"{
+                    println("moving node back to center")
+                    (node as SKNode).position = basePosition!
+                }
+            }
             stopButton!.hidden = true
             startButton!.hidden = false
         }
@@ -97,19 +114,19 @@ class OneBodyScene: SKScene {
         let nodeTouched = nodeAtPoint(touch.locationInNode(self))
         if (nodeTouched.name? != nil) {
             switch nodeTouched.name! {
+                
             case "Node":
                 showOptionPane()
+                
             case "Background":
                 hideOptionPane()
+                
             case "Start/Stop":
-                isRunning = !isRunning
-                for node in self.children {
-                    (node as SKNode).physicsBody?.dynamic = isRunning
-                }
                 switchPlayButton()
                 
             case "Back":
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
+                
             default:
                 println("Nothing Touched")
             }
