@@ -2,40 +2,52 @@
 //  OneBodyScene.swift
 //  FreeBody
 //
-//  Created by Conner DiPaolo on 12/30/14.
+//  Created by Jackson Kearl on 12/30/14.
 //  Copyright (c) 2014 Applications of Computer Science Club. All rights reserved.
 //
 
 import SpriteKit
 
 class OneBodyScene: SKScene {
-    let node:SKShapeNode?
-    let options:SKShapeNode?
+
     var isOptionVisible:Bool = false
+    var isRunning = false
 
     override func didMoveToView(view: SKView) {
-        self.backgroundColor = Colors.color("blue")
+        self.backgroundColor = FBColors.BlueDark
     }
 
     override init(size: CGSize) {
         super.init(size: size)
 
         let node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
-        node.fillColor = Colors.color("yellow")
+        node.fillColor = FBColors.Yellow
         node.lineWidth = 0
         node.name = "Node"
         node.position = CGPointMake(self.size.width/2, self.size.height/2)
+        node.physicsBody = SKPhysicsBody(rectangleOfSize: node.frame.size)
+        node.physicsBody?.dynamic = false
         self.addChild(node)
 
-        let backText = SKLabelNode(fontNamed: "GillSans-Bold")
-        backText.text = "Main Menu"
+        let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
+        self.addChild(backButton)
+        backButton.position = CGPointMake(backButton.size.width/2+backButton.size.height/2, backButton.size.height)
 
-        let back = SKShapeNode(rectOfSize: backText.frame.size)
-        back.addChild(backText)
-        
+
+        let startButton = FBButtonNode(text: "Start", identifier: "Start/Stop", size: 24)
+        startButton.name = "play"
+        addChild(startButton)
+        startButton.position = CGPointMake(startButton.size.width/2+startButton.size.height/2, self.size.height-startButton.size.height)
+
+        let stopButton = FBButtonNode(text: "Stop", identifier: "Start/Stop", size: 24)
+        stopButton.name = "pause"
+        addChild(stopButton)
+        stopButton.position = CGPointMake(stopButton.size.width/2+stopButton.size.height/2, self.size.height-stopButton.size.height)
+
+        switchPlayButton()
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
-        options.fillColor = Colors.color("brown")
+        options.fillColor = FBColors.Brown
         options.position = CGPointMake(self.size.width*7/6, self.size.height/2)
         options.name = "Options"
         options.lineWidth = 0
@@ -65,6 +77,21 @@ class OneBodyScene: SKScene {
         }
     }
 
+    func switchPlayButton() {
+        let startButton = self.childNodeWithName("play")
+
+        let stopButton = self.childNodeWithName("pause")
+
+        if isRunning {
+            startButton!.hidden = true
+            stopButton!.hidden = false
+        }
+        else {
+            stopButton!.hidden = true
+            startButton!.hidden = false
+        }
+    }
+
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
         let nodeTouched = nodeAtPoint(touch.locationInNode(self))
@@ -72,10 +99,17 @@ class OneBodyScene: SKScene {
             switch nodeTouched.name! {
             case "Node":
                 showOptionPane()
-            case "Options":
-                print()
             case "Background":
                 hideOptionPane()
+            case "Start/Stop":
+                isRunning = !isRunning
+                for node in self.children {
+                    (node as SKNode).physicsBody?.dynamic = isRunning
+                }
+                switchPlayButton()
+                
+            case "Back":
+                self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
             default:
                 println("Nothing Touched")
             }
@@ -84,6 +118,6 @@ class OneBodyScene: SKScene {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
 }

@@ -8,8 +8,18 @@
 
 import SpriteKit
 
+struct FBColors {
+    static let       Yellow = Colors.color("yellow")
+    static let YellowBright = Colors.color("yellowBright")
+    static let       Orange = Colors.color("orange")
+    static let OrangeBright = Colors.color("orangeBright")
+    static let         Blue = Colors.color("blue")
+    static let     BlueDark = Colors.color("blueDark")
+    static let        Brown = Colors.color("brown")
+}
+
 class Colors{
-    
+
     class func UIColorFromRGB(rgbValue: UInt) -> UIColor {
         return UIColor(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
@@ -18,8 +28,8 @@ class Colors{
             alpha: CGFloat(1.0)
         )
     }
-    
-    class func color (colorString: String) -> UIColor{
+
+    class func color (colorString:String) -> UIColor{
         switch colorString{
             case "yellow":
                 let colorHex: UInt = 0xCAB033
