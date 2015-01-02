@@ -136,7 +136,9 @@ class OneBodyScene: SKScene {
                 (node as SKNode).physicsBody?.dynamic = true
             }
             startButton!.hidden = true
+            startButton?.zPosition--
             stopButton!.hidden = false
+            stopButton?.zPosition++
         }
         else {
             // Physics is changed to not running, turn it off! Move node to center
@@ -148,13 +150,41 @@ class OneBodyScene: SKScene {
                 }
             }
             stopButton!.hidden = true
+            stopButton?.zPosition--
             startButton!.hidden = false
+            startButton?.zPosition++
+
+        }
+    }
+
+    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+        let touch = touches.anyObject() as UITouch
+        let nodeTouched = nodeAtPoint(touch.locationInNode(self))
+        if (nodeTouched.parent?.parent is FBButtonNode) {
+            (nodeTouched.parent!.parent as FBButtonNode).setTouched(true)
+        }
+    }
+
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        let touch = touches.anyObject() as UITouch
+
+        let nodeTouched = nodeAtPoint(touch.previousLocationInNode(self))
+
+        if (nodeTouched !== nodeAtPoint(touch.locationInNode(self))) {
+            if (nodeTouched.parent?.parent is FBButtonNode) {
+                (nodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+            }
         }
     }
 
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
         let nodeTouched = nodeAtPoint(touch.locationInNode(self))
+
+        if (nodeTouched.parent?.parent is FBButtonNode) {
+            (nodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+        }
+
         if (nodeTouched.name? != nil) {
             switch nodeTouched.name! {
                 
@@ -169,7 +199,7 @@ class OneBodyScene: SKScene {
                 
             case "Pause":
                 switchPlayButton()
-                
+
             case "Back":
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
                 
@@ -177,9 +207,9 @@ class OneBodyScene: SKScene {
                 println("Nothing Touched")
             }
         }
-
+        
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
