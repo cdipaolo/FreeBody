@@ -10,7 +10,7 @@ import SpriteKit
 
 class OneBodyScene: SKScene {
 
-    var isOptionVisible:Bool = false
+    var isOptionVisible = false
     var isRunning = false
     let basePosition: CGPoint?
 
@@ -52,6 +52,7 @@ class OneBodyScene: SKScene {
 
 
         let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
+        backButton.name = "MainMenu"
         self.addChild(backButton)
         backButton.position = CGPointMake(backButton.size.width/2+backButton.size.height/2, backButton.size.height)
 
@@ -89,6 +90,12 @@ class OneBodyScene: SKScene {
                 (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(-self.frame.width/3, 0), duration: 0.25))
             }
             isOptionVisible = true
+            if let node = self.childNodeWithName("Node"){
+                node.position = CGPointMake(self.size.width*2/3, self.size.height/2)
+            }
+            if let mainMenuButton = self.childNodeWithName("MainMenu"){
+                mainMenuButton.position = CGPointMake(self.size.width/3+mainMenuButton.frame.size.width/2 + mainMenuButton.frame.size.height/2, mainMenuButton.frame.size.height)
+            }
         }
     }
 
@@ -98,6 +105,12 @@ class OneBodyScene: SKScene {
                 (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(+self.frame.width/3, 0), duration: 0.25))
             }
             isOptionVisible = false
+            if let node = self.childNodeWithName("Node"){
+                node.position = CGPointMake(self.size.width*((1/2) - (1/3)), self.size.height/2)
+            }
+            if let mainMenuButton = self.childNodeWithName("MainMenu"){
+                mainMenuButton.position = CGPointMake(-self.size.width/3 + mainMenuButton.frame.size.width/2 + mainMenuButton.frame.size.height/2, mainMenuButton.frame.size.height)
+            }
         }
     }
 
