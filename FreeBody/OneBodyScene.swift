@@ -37,7 +37,7 @@ class OneBodyScene: SKScene {
 
     override init(size: CGSize) {
         super.init(size: size)
-        
+
         basePosition = CGPointMake(self.size.width/2, self.size.height/2)
 
         let node = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/4, self.size.width/4));
@@ -87,30 +87,40 @@ class OneBodyScene: SKScene {
     func showOptionPane() {
         if !isOptionVisible {
             for child in children {
-                (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(-self.frame.width/3, 0), duration: 0.25))
+                let name = (child as SKNode).name
+                if (name == "Node" || (child as SKNode).parent?.name == "Node") {
+                    // move central node and children (force arrows in future maybe) to be in new center
+                    (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(-self.frame.width/6, 0), duration: 0.25))
+                } else if (name == "MainMenu" ) {
+                    //stay in the same place
+                }
+                else {
+                    //move all the way. acts on option pane and children, along with all other nodes
+                    (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(-self.frame.width/3, 0), duration: 0.25))
+
+                }
             }
             isOptionVisible = true
-            if let node = self.childNodeWithName("Node"){
-                node.position = CGPointMake(self.size.width*2/3, self.size.height/2)
-            }
-            if let mainMenuButton = self.childNodeWithName("MainMenu"){
-                mainMenuButton.position = CGPointMake(self.size.width/3+mainMenuButton.frame.size.width/2 + mainMenuButton.frame.size.height/2, mainMenuButton.frame.size.height)
-            }
         }
     }
 
     func hideOptionPane() {
         if isOptionVisible {
             for child in children {
-                (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(+self.frame.width/3, 0), duration: 0.25))
+                let name = (child as SKNode).name
+                if (name == "Node" || (child as SKNode).parent?.name == "Node") {
+                    // move central node and children (force arrows in future maybe) to be in new center
+                    (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(+self.frame.width/6, 0), duration: 0.25))
+                } else if (name == "MainMenu" ) {
+                    //stay in the same place
+                }
+                else {
+                    //move all the way. acts on option pane and children, along with all other nodes
+                    (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(+self.frame.width/3, 0), duration: 0.25))
+                    
+                }
             }
             isOptionVisible = false
-            if let node = self.childNodeWithName("Node"){
-                node.position = CGPointMake(self.size.width*((1/2) - (1/3)), self.size.height/2)
-            }
-            if let mainMenuButton = self.childNodeWithName("MainMenu"){
-                mainMenuButton.position = CGPointMake(-self.size.width/3 + mainMenuButton.frame.size.width/2 + mainMenuButton.frame.size.height/2, mainMenuButton.frame.size.height)
-            }
         }
     }
 
