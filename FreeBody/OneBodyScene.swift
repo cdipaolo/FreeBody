@@ -17,6 +17,23 @@ class OneBodyScene: SKScene {
     override func didMoveToView(view: SKView) {
         self.backgroundColor = FBColors.BlueDark
     }
+    
+    func triangleInRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) -> SKShapeNode {
+        let rect = CGRectMake(x, y, width, height)
+        let offsetX: CGFloat = CGRectGetMidX(rect)
+        let offsetY: CGFloat = CGRectGetMidY(rect)
+        var bezierPath: UIBezierPath = UIBezierPath()
+        
+        bezierPath.moveToPoint(CGPointMake(offsetX, 0))
+        bezierPath.addLineToPoint(CGPointMake(-offsetX, offsetY))
+        bezierPath.addLineToPoint(CGPointMake(-offsetX, -offsetY))
+        bezierPath.closePath()
+        
+        let shape: SKShapeNode = SKShapeNode()
+        shape.path = bezierPath.CGPath
+        
+        return shape
+    }
 
     override init(size: CGSize) {
         super.init(size: size)
@@ -38,16 +55,19 @@ class OneBodyScene: SKScene {
         self.addChild(backButton)
         backButton.position = CGPointMake(backButton.size.width/2+backButton.size.height/2, backButton.size.height)
 
-
-        let startButton = FBButtonNode(text: "Start", identifier: "Start/Stop", size: 24)
-        startButton.name = "play"
+        let startButton = triangleInRect(0, y: 0, width: 32, height: 32)
+        startButton.strokeColor = FBColors.YellowBright
+        startButton.fillColor = FBColors.YellowBright
+        startButton.name = "Play"
         addChild(startButton)
-        startButton.position = CGPointMake(startButton.size.width/2+startButton.size.height/2, self.size.height-startButton.size.height)
+        startButton.position = CGPointMake(startButton.frame.size.width/2+startButton.frame.size.height/2, self.size.height-startButton.frame.size.height)
 
-        let stopButton = FBButtonNode(text: "Stop", identifier: "Start/Stop", size: 24)
-        stopButton.name = "pause"
+        let stopButton = SKShapeNode(rectOfSize: CGSizeMake(32, 32))
+        stopButton.strokeColor = FBColors.YellowBright
+        stopButton.fillColor = FBColors.YellowBright
+        stopButton.name = "Pause"
         addChild(stopButton)
-        stopButton.position = CGPointMake(stopButton.size.width/2+stopButton.size.height/2, self.size.height-stopButton.size.height)
+        stopButton.position = CGPointMake(stopButton.frame.size.width/2+stopButton.frame.size.height/2, self.size.height-stopButton.frame.size.height)
         stopButton.hidden = true
 
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
@@ -84,13 +104,13 @@ class OneBodyScene: SKScene {
     func switchPlayButton() {
         isRunning = !isRunning
         
-        let startButton = self.childNodeWithName("play")
-        let stopButton = self.childNodeWithName("pause")
+        let startButton = self.childNodeWithName("Play")
+        let stopButton = self.childNodeWithName("Pause")
 
         if isRunning {
             // if physics is changed to running, start physics
             for node in self.children {
-                (node as SKNode).physicsBody?.dynamic = isRunning
+                (node as SKNode).physicsBody?.dynamic = true
             }
             startButton!.hidden = true
             stopButton!.hidden = false
@@ -121,7 +141,10 @@ class OneBodyScene: SKScene {
             case "Background":
                 hideOptionPane()
                 
-            case "Start/Stop":
+            case "Play":
+                switchPlayButton()
+                
+            case "Pause":
                 switchPlayButton()
                 
             case "Back":
