@@ -8,32 +8,6 @@
 
 import Darwin
 
-// returns power of a double to an int
-// pow(2,3) = 8
-func power(x: Double, y: Int) -> Double{
-    if y < 0 {
-        return 1 / power(x, -y)
-    } else if y == 0 {
-        return 1
-    } else if y == 1 {
-        return x
-    } else {
-        var power = x
-        for (var i = 0; i < y; i++) {
-            power *= x
-        }
-        return power
-    }
-}
-
-// returns the arc tangent of a number
-// arctan(1) = pi/4 = .78539...
-func arctan(x: Double) -> Double{
-    let tmp: Double = x - (power(x,3)/3) + (power(x,5)/5) - (power(x, 7)/7) + (power(x,9)/9)
-    return tmp
-}
-
-
 // implementation of a stack data structure to hold forces
 class Stack<T>{
     var data: Array<T> = []
@@ -58,31 +32,13 @@ class Stack<T>{
 }
 
 class Force{
-    private var _i: Double = 0
-    private var _j: Double = 0
-    private var _magnitude: Double = 0
     
-    var i: Double {
-        set{
-            self._i = i
-            self._magnitude = sqrt( self._i*self._i + self._j*self._j )
-        } get {
-            return self._i
-        }
-    }
-    
-    var j: Double {
-        set{
-            self._j = j
-            self._magnitude = sqrt( self._i*self._i + self._j*self._j )
-        } get {
-            return self._j
-        }
-    }
+    var i: Double
+    var j: Double
     
     var magnitude: Double {
         get {
-            return self._magnitude
+            return sqrt( self.i*self.i + self.j*self.j )
         }
     }
     
@@ -90,14 +46,17 @@ class Force{
     init (_ iVal: Double, _ jVal: Double){
         // i units (x axis)
         i = iVal
-        
+        println("setting force.i to \(iVal)...")
+        println("force.i = \(self.i)")
         // j units (y axis)
         j = jVal
+        println("setting force.j to \(jVal)...")
+        println("force.j = \(self.j)")
     }
     
     // returns angle from x axis
     func angle() -> Double{
         let artan: Double = self.j / self.i
-        return arctan(artan)
+        return atan(artan)
     }
 }

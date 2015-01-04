@@ -80,8 +80,6 @@ class OneBodyScene: SKScene {
 
         self.name = "Background"
 
-
-
     }
 
     func showOptionPane() {
