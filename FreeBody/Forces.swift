@@ -33,6 +33,8 @@ func arctan(x: Double) -> Double{
     return tmp
 }
 
+
+// implementation of a stack data structure to hold forces
 class Stack<T>{
     var data: Array<T> = []
     
