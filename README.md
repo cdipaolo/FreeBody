@@ -6,7 +6,9 @@ Participating Developers:
 - Conner DiPaolo
 - Jackson Kearl
 - William Davenport
+- Nicholas Carey
 - Caroline Quigg
+- Christian Yassa
 
 #Plan
 

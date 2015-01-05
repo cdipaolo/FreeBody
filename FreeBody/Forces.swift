@@ -31,7 +31,7 @@ class Stack<T>{
     }
 }
 
-class Force{
+class Vector{
     
     var i: Double
     var j: Double
@@ -59,4 +59,12 @@ class Force{
         let artan: Double = self.j / self.i
         return atan(artan)
     }
+}
+
+class Force: Vector{
+    
+}
+
+class Velocity: Vector{
+    
 }
