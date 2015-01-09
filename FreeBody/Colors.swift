@@ -16,6 +16,8 @@ struct FBColors {
     static let         Blue = Colors.color("blue")
     static let     BlueDark = Colors.color("blueDark")
     static let        Brown = Colors.color("brown")
+    static let          Red = Colors.color("redLight")
+    static let        Green = Colors.color("green")
 }
 
 class Colors{
@@ -51,6 +53,12 @@ class Colors{
                 return UIColorFromRGB(colorHex)
             case "brown":
                 let colorHex: UInt = 0xD49A6A
+                return UIColorFromRGB(colorHex)
+            case "redLight":
+                let colorHex: UInt = 0xD46A6A
+                return UIColorFromRGB(colorHex)
+            case "green":
+                let colorHex: UInt = 0x68B159
                 return UIColorFromRGB(colorHex)
             default:
                 println("Error: using default case for color- returning white")

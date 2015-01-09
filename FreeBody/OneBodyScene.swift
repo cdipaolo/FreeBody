@@ -13,6 +13,7 @@ class OneBodyScene: SKScene {
     var isOptionVisible = false
     var isRunning = false
     let basePosition: CGPoint?
+    var forces: Stack<Force> = Stack<Force>()
 
     override func didMoveToView(view: SKView) {
         self.backgroundColor = FBColors.BlueDark
@@ -49,8 +50,7 @@ class OneBodyScene: SKScene {
         node.physicsBody?.dynamic = false
         self.addChild(node)
         
-
-
+        
         let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
         backButton.name = "MainMenu"
         self.addChild(backButton)
@@ -77,6 +77,11 @@ class OneBodyScene: SKScene {
         options.name = "Options"
         options.lineWidth = 0
         self.addChild(options)
+        
+        let forcesAdd = FBButtonNode(text: "+", identifier: "AddForce", size: 24)
+        forcesAdd.name = "ForcesAdd"
+        options.addChild(forcesAdd)
+        
 
         self.name = "Background"
 
@@ -154,6 +159,27 @@ class OneBodyScene: SKScene {
 
         }
     }
+    
+    // add a force to the forces stack
+    func addForce(){
+        if self.forces.isEmpty(){
+            self.forces.push(Force(0,-9.8,identifier: 0x1))
+            println("adding gravity to forces")
+        }
+    
+        let bitLeft: Int = self.forces.data.count - 1
+        let identif: UInt32 = 0x1
+        for i in 0...bitLeft {
+            identif << 1
+        }
+        let exampleForce: Force = Force(5,0,identifier: identif)
+        
+        self.forces.push(exampleForce)
+        
+        let node: SKShapeNode = exampleForce.shapeNode(20, y: 20)
+        self.addChild(node)
+        
+    }
 
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
@@ -200,6 +226,9 @@ class OneBodyScene: SKScene {
 
             case "Back":
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
+            
+            case "ForcesAdd":
+                addForce()
                 
             default:
                 println("Nothing Touched")
