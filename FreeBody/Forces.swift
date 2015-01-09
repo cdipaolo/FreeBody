@@ -128,6 +128,8 @@ class Force: Vector{
         
         let shape: SKShapeNode = SKShapeNode()
         shape.path = path.CGPath
+        shape.fillColor = color
+        shape.strokeColor = color
         
         return shape
     }
@@ -141,12 +143,14 @@ class Velocity: Vector{
         let tailWidth: CGFloat = CGFloat(6)
         let headWidth: CGFloat = 2.5 * tailWidth
         let initial: CGPoint = CGPoint(x: x, y: y)
-        let final : CGPoint = CGPoint(x: x + CGFloat(self.i), y: y + CGFloat(self.j))
+        let final : CGPoint = CGPoint(x: x + CGFloat(self.i * 10), y: y + CGFloat(self.j * 10))
         
-        let path: UIBezierPath = UIBezierPath.bezierPathWithArrowFromPoint(initial, endPoint: final, tailWidth: tailWidth, headWidth: headWidth, headLength: CGFloat(self.magnitude))
+        let path: UIBezierPath = UIBezierPath.bezierPathWithArrowFromPoint(initial, endPoint: final, tailWidth: tailWidth, headWidth: headWidth, headLength: CGFloat(self.magnitude * 100))
         
         let shape: SKShapeNode = SKShapeNode()
         shape.path = path.CGPath
+        shape.fillColor = color
+        shape.strokeColor = color
         
         return shape
     }

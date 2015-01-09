@@ -175,10 +175,11 @@ class OneBodyScene: SKScene {
         let exampleForce: Force = Force(5,0,identifier: identif)
         
         self.forces.push(exampleForce)
-        
-        let node: SKShapeNode = exampleForce.shapeNode(20, y: 20)
-        self.addChild(node)
-        
+        if let object = self.childNodeWithName("Node"){
+        let node: SKShapeNode = exampleForce.shapeNode(0, y: 0)
+        object.addChild(node)
+        println(self.forces.data)
+        }
     }
 
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -227,7 +228,7 @@ class OneBodyScene: SKScene {
             case "Back":
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
             
-            case "ForcesAdd":
+            case "AddForce":
                 addForce()
                 
             default:
