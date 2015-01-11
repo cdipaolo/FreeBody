@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import Darwin
 
 class OneBodyScene: SKScene {
 
@@ -49,6 +50,26 @@ class OneBodyScene: SKScene {
         node.physicsBody = SKPhysicsBody(rectangleOfSize: node.frame.size)
         node.physicsBody?.dynamic = false
         self.addChild(node)
+        
+        let nodeCircle = SKShapeNode(circleOfRadius: 10)
+        nodeCircle.fillColor = FBColors.Red
+        nodeCircle.lineWidth = 0
+        nodeCircle.name = "Node"
+        node.addChild(nodeCircle)
+        
+        self.forces.push(Force(0,-9.8,identifier: 0x1))
+        println("adding gravity to forces")
+        
+
+            let π = M_PI
+            
+            let force: SKShapeNode = self.forces.data[0].shapeNode(0, y: 0)
+            let rotate = SKAction.rotateToAngle(CGFloat(3*π/2), duration: 0.0)
+            
+            force.runAction(rotate)
+            force.name = "Force"
+            node.addChild(force)
+            println(self.forces.data)
         
         
         let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
@@ -162,23 +183,20 @@ class OneBodyScene: SKScene {
     
     // add a force to the forces stack
     func addForce(){
-        if self.forces.isEmpty(){
-            self.forces.push(Force(0,-9.8,identifier: 0x1))
-            println("adding gravity to forces")
-        }
     
-        let bitLeft: Int = self.forces.data.count - 1
-        let identif: UInt32 = 0x1
-        for i in 0...bitLeft {
-            identif << 1
-        }
+        let bitLeft: UInt32 = UInt32(Int(self.forces.data.count) - 1)
+        var identif: UInt32 = 0x1 << bitLeft
+        
+        
         let exampleForce: Force = Force(5,0,identifier: identif)
         
         self.forces.push(exampleForce)
+        println("adding force with identifier: \(identif) || \(self.forces.data.count) objects in stack")
         if let object = self.childNodeWithName("Node"){
-        let node: SKShapeNode = exampleForce.shapeNode(0, y: 0)
-        object.addChild(node)
-        println(self.forces.data)
+            let node: SKShapeNode = exampleForce.shapeNode(0, y: 0)
+            node.name = "Force"
+            object.addChild(node)
+            println(self.forces.data)
         }
     }
 
@@ -230,6 +248,9 @@ class OneBodyScene: SKScene {
             
             case "AddForce":
                 addForce()
+            
+            case "Force":
+                println("Touched a Force")
                 
             default:
                 println("Nothing Touched")
