@@ -262,14 +262,14 @@ class OneBodyScene: SKScene {
     
     override func update(currentTime: NSTimeInterval) {
         if (isRunning){
-            for node in self.children{
+            let node = self.childNodeWithName("Node")
             for force:Force in forces.data {
-                (node as SKNode).physicsBody?.applyForce(force.cgVector())
+                node!.physicsBody?.applyForce(force.cgVector())
                 println(force)
                 println(forces.items())
                 println("applying force")
             }
-            }
+            
         }
     }
     required init?(coder aDecoder: NSCoder) {
