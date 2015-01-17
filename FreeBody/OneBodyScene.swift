@@ -157,6 +157,7 @@ class OneBodyScene: SKScene {
         if isRunning {
             // if physics is changed to running, start physics
             for node in self.children {
+                (node as SKNode).physicsBody?.affectedByGravity = false
                 (node as SKNode).physicsBody?.dynamic = true
             }
             startButton!.hidden = true
@@ -259,6 +260,18 @@ class OneBodyScene: SKScene {
         
     }
     
+    override func update(currentTime: NSTimeInterval) {
+        if (isRunning){
+            for node in self.children{
+            for force:Force in forces.data {
+                (node as SKNode).physicsBody?.applyForce(force.cgVector())
+                println(force)
+                println(forces.items())
+                println("applying force")
+            }
+            }
+        }
+    }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
