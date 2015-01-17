@@ -57,19 +57,19 @@ class OneBodyScene: SKScene {
         nodeCircle.name = "Node"
         node.addChild(nodeCircle)
         
-        self.forces.push(Force(0,-9.8,identifier: 0x1))
+        self.forces.push(Force(0,-9.8,identifier: 0b1))
         println("adding gravity to forces")
         
 
-            let π = M_PI
-            
-            let force: SKShapeNode = self.forces.data[0].shapeNode(0, y: 0)
-            let rotate = SKAction.rotateToAngle(CGFloat(3*π/2), duration: 0.0)
-            
-            force.runAction(rotate)
-            force.name = "Force"
-            node.addChild(force)
-            println(self.forces.data)
+        let π = M_PI
+        
+        let force: SKShapeNode = self.forces.data[0].shapeNode(0, y: 0)
+        let rotate = SKAction.rotateToAngle(CGFloat(3*π/2), duration: 0.0)
+        
+        force.runAction(rotate)
+        force.name = "Force"
+        node.addChild(force)
+        println(self.forces.data)
         
         
         let backButton = FBButtonNode(text: "Main Menu", identifier: "Back", size: 24)
@@ -185,7 +185,7 @@ class OneBodyScene: SKScene {
     func addForce(){
     
         let bitLeft: UInt32 = UInt32(Int(self.forces.data.count) - 1)
-        var identif: UInt32 = 0x1 << bitLeft
+        var identif: UInt32 = 0b1 << bitLeft
         
         
         let exampleForce: Force = Force(5,0,identifier: identif)
@@ -198,6 +198,29 @@ class OneBodyScene: SKScene {
             object.addChild(node)
             println(self.forces.data)
         }
+    }
+    
+    func distance(a: CGPoint,_ b: CGPoint) -> Double{
+        let x = b.x - a.x
+        let y = b.y - a.y
+        
+        return sqrt( Double(x*x) + Double(y*y) )
+        
+    }
+    
+    // changes a force in both data and visual representation based on user moving touch
+    func changeForce(node: SKNode,_ touch: UITouch){
+        let x = touch.locationInView(self.view!).x
+        let y = touch.locationInView(self.view!).y
+        
+        let i = x / 25
+        let j = y / 25
+        
+        
+        
+        var identifier: UInt32 = log2()
+        
+        
     }
 
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -216,6 +239,10 @@ class OneBodyScene: SKScene {
         if (nodeTouched !== nodeAtPoint(touch.locationInNode(self))) {
             if (nodeTouched.parent?.parent is FBButtonNode) {
                 (nodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+            } else if let name = nodeTouched.name{
+                if name == "Force"{
+                    changeForce(nodeTouched, touch)
+                }
             }
         }
     }
