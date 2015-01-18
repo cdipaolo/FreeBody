@@ -9,6 +9,8 @@
 import SpriteKit
 import Darwin
 
+
+
 class OneBodyScene: SKScene {
 
     var isOptionVisible = false
@@ -57,16 +59,18 @@ class OneBodyScene: SKScene {
         nodeCircle.name = "Node"
         node.addChild(nodeCircle)
         
-        self.forces.push(Force(0,-9.8,identifier: 0b1))
-        println("adding gravity to forces")
-        
-
         let π = M_PI
         
-        let force: SKShapeNode = self.forces.data[0].shapeNode(0, y: 0)
+        let gravity: Force = Force(0,-9.8,identifier: 0b1)
+        
+        let force = gravity.shapeNode(0, y: 0)
         let rotate = SKAction.rotateToAngle(CGFloat(3*π/2), duration: 0.0)
         
-
+        gravity.correspondingNode = force
+        self.forces.push(gravity)
+        println("adding gravity to forces")
+        
+        
         force.runAction(rotate)
         force.name = "Force"
         node.addChild(force)
@@ -191,13 +195,16 @@ class OneBodyScene: SKScene {
         
         let exampleForce: Force = Force(5,0,identifier: identif)
 
-        self.forces.push(exampleForce)
+        
         println("adding force with identifier: \(identif) || \(self.forces.data.count) objects in stack")
         if let object = self.childNodeWithName("Node"){
-            let node: SKShapeNode = exampleForce.shapeNode(0, y: 0)
+            let node: VectorNode = (exampleForce.shapeNode(0, y: 0) as VectorNode)
+            exampleForce.correspondingNode = node
             node.name = "Force"
             object.addChild(node)
             println(self.forces.data)
+            
+            self.forces.push(exampleForce)
         }
     }
     
@@ -218,8 +225,6 @@ class OneBodyScene: SKScene {
         let j = y / 25
         
         
-        
-        var identifier: UInt32 = log2()
         
         
     }
@@ -257,7 +262,7 @@ class OneBodyScene: SKScene {
         let mainNode = self.childNodeWithName("Node")
         let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.locationInNode(mainNode))
         if (childOfMainNodeTouched?.name? == "Force") {
-            childOfMainNodeTouched as 
+            changeForce(childOfMainNodeTouched!, touch)
         }
 
     }

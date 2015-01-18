@@ -63,6 +63,21 @@ class Stack<T>{
 
 class Vector{
     
+    var correspondingNode: VectorNode? {
+            didSet {
+                if (self.correspondingNode!.correspondingVector !== self) {
+                    self.correspondingNode!.correspondingVector = self
+            }
+        }
+    
+        /*set(shapeNode) {
+            self.correspondingNode = shapeNode
+            if (shapeNode?.correspondingVector !== self) {
+                shapeNode!.correspondingVector = self
+            }
+        }*/
+    }
+    
     var i: Double
     var j: Double
     var identifier: UInt32
@@ -98,16 +113,17 @@ class Vector{
 }
 
 class Force: Vector{
+
     
     // creates SKShapeNode which is sized relative to a CGFrame
-    func shapeNode(x: CGFloat, y: CGFloat) -> SKShapeNode{
+    func shapeNode(x: CGFloat, y: CGFloat) -> VectorNode{
         let color = FBColors.Red
         let tailWidth: CGFloat = CGFloat(15)
         let headWidth: CGFloat = 2 * tailWidth
 
         let path: UIBezierPath = UIBezierPath.arrowPath(CGFloat(magnitude * 25), tailWidth: tailWidth, headWidth: headWidth)
         
-        let shape: SKShapeNode = SKShapeNode()
+        let shape: VectorNode = VectorNode()
         shape.path = path.CGPath
         shape.fillColor = color
         shape.strokeColor = color
@@ -118,19 +134,31 @@ class Force: Vector{
 
 class Velocity: Vector{
     
+    
     // creates SKShapeNode which is sized relative to a CGFrame
-    func shapeNode(x: CGFloat, y: CGFloat) -> SKShapeNode{
+    func shapeNode(x: CGFloat, y: CGFloat) -> VectorNode{
         let color = FBColors.Green
         let tailWidth: CGFloat = CGFloat(6)
         let headWidth: CGFloat = 2.5 * tailWidth
         
         let path: UIBezierPath = UIBezierPath.arrowPath(CGFloat(magnitude * 10), tailWidth: tailWidth, headWidth: headWidth)
         
-        let shape: SKShapeNode = SKShapeNode()
+        let shape: VectorNode = VectorNode()
         shape.path = path.CGPath
         shape.fillColor = color
         shape.strokeColor = color
         
         return shape
+    }
+}
+
+
+class VectorNode: SKShapeNode {
+    var correspondingVector: Vector? {
+        didSet{
+            if (self.correspondingVector?.correspondingNode? !== self) {
+                self.correspondingVector?.correspondingNode? = self
+            }
+        }
     }
 }
