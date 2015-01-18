@@ -69,13 +69,6 @@ class Vector{
                     self.correspondingNode!.correspondingVector = self
             }
         }
-    
-        /*set(shapeNode) {
-            self.correspondingNode = shapeNode
-            if (shapeNode?.correspondingVector !== self) {
-                shapeNode!.correspondingVector = self
-            }
-        }*/
     }
     
     var i: Double
@@ -116,7 +109,7 @@ class Force: Vector{
 
     
     // creates SKShapeNode which is sized relative to a CGFrame
-    func shapeNode(x: CGFloat, y: CGFloat) -> VectorNode{
+    func shapeNode(x: CGFloat, _  y: CGFloat) -> VectorNode{
         let color = FBColors.Red
         let tailWidth: CGFloat = CGFloat(15)
         let headWidth: CGFloat = 2 * tailWidth
@@ -127,6 +120,7 @@ class Force: Vector{
         shape.path = path.CGPath
         shape.fillColor = color
         shape.strokeColor = color
+        shape.name = "Force"
         
         return shape
     }
@@ -135,8 +129,8 @@ class Force: Vector{
 class Velocity: Vector{
     
     
-    // creates SKShapeNode which is sized relative to a CGFrame
-    func shapeNode(x: CGFloat, y: CGFloat) -> VectorNode{
+    // creates SKShapeNode shaped like an arrow
+    func shapeNode(x: CGFloat, _ y: CGFloat) -> VectorNode{
         let color = FBColors.Green
         let tailWidth: CGFloat = CGFloat(6)
         let headWidth: CGFloat = 2.5 * tailWidth
@@ -161,4 +155,5 @@ class VectorNode: SKShapeNode {
             }
         }
     }
+    
 }

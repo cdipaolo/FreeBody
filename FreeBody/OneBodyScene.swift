@@ -63,7 +63,7 @@ class OneBodyScene: SKScene {
         
         let gravity: Force = Force(0,-9.8,identifier: 0b1)
         
-        let force = gravity.shapeNode(0, y: 0)
+        let force = gravity.shapeNode(0, 0)
         let rotate = SKAction.rotateToAngle(CGFloat(3*π/2), duration: 0.0)
         
         gravity.correspondingNode = force
@@ -198,7 +198,7 @@ class OneBodyScene: SKScene {
         
         println("adding force with identifier: \(identif) || \(self.forces.data.count) objects in stack")
         if let object = self.childNodeWithName("Node"){
-            let node: VectorNode = (exampleForce.shapeNode(0, y: 0) as VectorNode)
+            let node: VectorNode = (exampleForce.shapeNode(0, 0) as VectorNode)
             exampleForce.correspondingNode = node
             node.name = "Force"
             object.addChild(node)
@@ -218,13 +218,31 @@ class OneBodyScene: SKScene {
     
     // changes a force in both data and visual representation based on user moving touch
     func changeForce(node: SKNode,_ touch: UITouch){
-        let x = touch.locationInView(self.view!).x
-        let y = touch.locationInView(self.view!).y
+        let x = touch.locationInNode(node.parent).x
+        let y = touch.locationInNode(node.parent).y
         
         let i = x / 25
         let j = y / 25
         
-        
+        if node is VectorNode{
+            let force = (node as VectorNode).correspondingVector
+            force!.i = Double(i)
+            force!.j = Double(j)
+            
+            node.removeFromParent()
+            let angle: CGFloat = i<0 ? CGFloat(force!.angle() + M_PI) : CGFloat(force!.angle())
+            
+            
+            let rotate = SKAction.rotateToAngle(angle, duration: 0.0)
+            let newNode: VectorNode = (force! as Force).shapeNode(0,0)
+            newNode.runAction(rotate)
+            force?.correspondingNode = newNode
+            
+            if let object = self.childNodeWithName("Node"){
+                object.addChild(newNode)
+            }
+            
+        }
         
         
     }
@@ -315,9 +333,6 @@ class OneBodyScene: SKScene {
             let node = self.childNodeWithName("Node")
             for force:Force in forces.data {
                 node!.physicsBody?.applyForce(force.cgVector())
-                println(force)
-                println(forces.items())
-                println("applying force")
             }
             
         }
