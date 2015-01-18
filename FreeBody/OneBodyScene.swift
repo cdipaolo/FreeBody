@@ -61,7 +61,7 @@ class OneBodyScene: SKScene {
         
         let π = M_PI
         
-        let gravity: Force = Force(0,-9.8,identifier: 0b1)
+        let gravity: Force = Force(0,-9.8)
         
         let force = gravity.shapeNode(0, 0)
         let rotate = SKAction.rotateToAngle(CGFloat(3*π/2), duration: 0.0)
@@ -188,15 +188,11 @@ class OneBodyScene: SKScene {
 
     // add a force to the forces stack
     func addForce(){
-
-        let bitLeft: UInt32 = UInt32(Int(self.forces.data.count) - 1)
-
-        var identif: UInt32 = 0b1 << bitLeft
         
-        let exampleForce: Force = Force(5,0,identifier: identif)
+        let exampleForce: Force = Force(5,0)
 
         
-        println("adding force with identifier: \(identif) || \(self.forces.data.count) objects in stack")
+        println("adding force | \(self.forces.data.count) objects in stack")
         if let object = self.childNodeWithName("Node"){
             let node: VectorNode = (exampleForce.shapeNode(0, 0) as VectorNode)
             exampleForce.correspondingNode = node

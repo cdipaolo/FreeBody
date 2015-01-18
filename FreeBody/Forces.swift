@@ -73,7 +73,6 @@ class Vector{
     
     var i: Double
     var j: Double
-    var identifier: UInt32
     
     var magnitude: Double {
         get {
@@ -82,15 +81,12 @@ class Vector{
     }
     
     // let gravity: Vector = Vector(0,-9.8)
-    init (_ iVal: Double, _ jVal: Double, identifier bitmask: UInt32){
+    init (_ iVal: Double, _ jVal: Double){
         // i units (x axis)
         i = iVal
         
         // j units (y axis)
         j = jVal
-        
-        // set bitmask identifier
-        identifier = bitmask
     }
     
     // returns angle from x axis
