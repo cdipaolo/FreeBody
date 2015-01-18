@@ -13,15 +13,19 @@ import Darwin
 
 class OneBodyScene: SKScene {
 
+    // initialize instance variables
     var isOptionVisible = false
     var isRunning = false
     let basePosition: CGPoint?
     var forces: Stack<Force> = Stack<Force>()
 
+    
+    // set background to dark blue
     override func didMoveToView(view: SKView) {
         self.backgroundColor = FBColors.BlueDark
     }
 
+    // returns a triangularly shaped SKShapeNode based on given dimensions
     func triangleInRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) -> SKShapeNode {
         let rect = CGRectMake(x, y, width, height)
         let offsetX: CGFloat = CGRectGetMidX(rect)
@@ -51,6 +55,7 @@ class OneBodyScene: SKScene {
         node.position = basePosition!
         node.physicsBody = SKPhysicsBody(rectangleOfSize: node.frame.size)
         node.physicsBody?.dynamic = false
+        node.physicsBody?.affectedByGravity = false
         self.addChild(node)
 
         let nodeCircle = SKShapeNode(circleOfRadius: 10)
@@ -104,8 +109,11 @@ class OneBodyScene: SKScene {
         self.addChild(options)
 
         let forcesAdd = FBButtonNode(text: "+", identifier: "AddForce", size: 24)
-        forcesAdd.name = "ForcesAdd"
         options.addChild(forcesAdd)
+        
+        let forcesSubtract = FBButtonNode(text: "-", identifier: "SubtractForce", size: 24)
+        options.addChild(forcesSubtract)
+        forcesSubtract.position = CGPointMake(40, 0)
 
 
         self.name = "Background"
@@ -160,9 +168,9 @@ class OneBodyScene: SKScene {
 
         if isRunning {
             // if physics is changed to running, start physics
-            for node in self.children {
-                (node as SKNode).physicsBody?.affectedByGravity = false
-                (node as SKNode).physicsBody?.dynamic = true
+            if let node: SKNode = self.childNodeWithName("Node"){
+                println("starting dynamic movement")
+                node.physicsBody?.dynamic = isRunning
             }
             startButton!.hidden = true
             startButton?.zPosition--
@@ -171,13 +179,13 @@ class OneBodyScene: SKScene {
         }
         else {
             // Physics is changed to not running, turn it off! Move node to center
-            for node in self.children {
-                (node as SKNode).physicsBody?.dynamic = isRunning
-                if (node as SKNode).name=="Node"{
-                    println("moving node back to center")
-                    (node as SKNode).position = basePosition!
-                }
+            
+            if let node: SKNode = self.childNodeWithName("Node"){
+                println("stopping dynamic movement, moving node back to center")
+                node.physicsBody?.dynamic = false
+                node.position = basePosition!
             }
+            
             stopButton!.hidden = true
             stopButton?.zPosition--
             startButton!.hidden = false
@@ -204,12 +212,9 @@ class OneBodyScene: SKScene {
         }
     }
     
-    func distance(a: CGPoint,_ b: CGPoint) -> Double{
-        let x = b.x - a.x
-        let y = b.y - a.y
-        
-        return sqrt( Double(x*x) + Double(y*y) )
-        
+    // subtract (pop) the most recently allocated force from the forces stack
+    func subtractForce(){
+        if let tmp: Force = forces.pop() { tmp.correspondingNode!.removeFromParent() }
     }
     
     // changes a force in both data and visual representation based on user moving touch
@@ -250,14 +255,6 @@ class OneBodyScene: SKScene {
         if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
             (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(true)
         }
-
-        let mainNode = self.childNodeWithName("Node")
-        let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.locationInNode(mainNode))
-        if (childOfMainNodeTouched?.name? == "Force") {
-            (childOfMainNodeTouched as SKShapeNode).strokeColor = FBColors.Green
-            (childOfMainNodeTouched as SKShapeNode).fillColor = FBColors.Green
-        }
-
     }
 
     override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
@@ -275,6 +272,8 @@ class OneBodyScene: SKScene {
 
         let mainNode = self.childNodeWithName("Node")
         let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.locationInNode(mainNode))
+        
+        // if node touch, moved, is a force, change the force relative to the location of the touch
         if (childOfMainNodeTouched?.name? == "Force") {
             changeForce(childOfMainNodeTouched!, touch)
         }
@@ -293,35 +292,42 @@ class OneBodyScene: SKScene {
             switch childOfSceneNodeTouched.name! {
 
             case "Node":
+                // if node clicked, show options panel
                 showOptionPane()
 
             case "Background":
-                hideOptionPane()
+                // if options is visible, hide the options panel
+                if isOptionVisible{
+                    hideOptionPane()
+                }
 
             case "Play":
+                // play physics and switch to pause button
                 switchPlayButton()
 
             case "Pause":
+                // pause the physics and switch to play button
                 switchPlayButton()
 
             case "Back":
+                // if main menu button pressed, present main menu scene
                 self.view!.presentScene(MainMenuScene(size: self.size), transition: .doorsCloseHorizontalWithDuration(0.5))
 
             case "AddForce":
+                // if add force button is clicked, add generic force
                 addForce()
+                
+            case "SubtractForce":
+                // more efficient to check if forces is empty rather than run function every time
+                //      even when you don't need to
+                if !forces.isEmpty(){
+                    subtractForce()
+                }
 
             default:
                 println("Nothing Touched")
             }
         }
-
-        let mainNode = self.childNodeWithName("Node")
-        let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.locationInNode(mainNode))
-        if (childOfMainNodeTouched?.name? == "Force") {
-            (childOfMainNodeTouched as SKShapeNode).strokeColor = FBColors.Red
-            (childOfMainNodeTouched as SKShapeNode).fillColor = FBColors.Red
-        }
-
     }
     
     override func update(currentTime: NSTimeInterval) {

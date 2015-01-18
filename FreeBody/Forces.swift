@@ -97,7 +97,7 @@ class Vector{
     
     // return CGVector with Vector's properties
     func cgVector() -> CGVector{
-        return CGVector(dx: CGFloat(self.i), dy: CGFloat(self.j))
+        return CGVector(dx: CGFloat(self.i * 20), dy: CGFloat(self.j * 20))
     }
 }
 
