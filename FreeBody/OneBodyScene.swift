@@ -56,8 +56,11 @@ class OneBodyScene: SKScene {
         node.physicsBody = SKPhysicsBody(rectangleOfSize: node.frame.size)
         node.physicsBody?.dynamic = false
         node.physicsBody?.affectedByGravity = false
+        node.physicsBody!.mass = 10
         self.addChild(node)
 
+        
+        // TODO: make either 15/2 or 15. 10 looks kinda funky inbetween
         let nodeCircle = SKShapeNode(circleOfRadius: 10)
         nodeCircle.fillColor = FBColors.Red
         nodeCircle.lineWidth = 0
@@ -100,24 +103,61 @@ class OneBodyScene: SKScene {
         addChild(stopButton)
         stopButton.position = CGPointMake(stopButton.frame.size.width/2+stopButton.frame.size.height/2, self.size.height-stopButton.frame.size.height)
         stopButton.hidden = true
+        
+        setupOptionPane()
 
+        self.name = "Background"
+
+    }
+    
+    func setupOptionPane(){
+        
         let options = SKShapeNode(rectOfSize: CGSizeMake(self.size.width/3, self.size.height))
         options.fillColor = FBColors.Brown
         options.position = CGPointMake(self.size.width*7/6, self.size.height/2)
         options.name = "Options"
         options.lineWidth = 0
         self.addChild(options)
-
-        let forcesAdd = FBButtonNode(text: "+", identifier: "AddForce", size: 24)
-        options.addChild(forcesAdd)
         
-        let forcesSubtract = FBButtonNode(text: "-", identifier: "SubtractForce", size: 24)
-        options.addChild(forcesSubtract)
-        forcesSubtract.position = CGPointMake(40, 0)
+        let forcesOptionsPane = FBButtonNode(text: "Forces:", identifier: nil, size: 32)
+        options.addChild(forcesOptionsPane)
+        
+        let forcesAdd = FBButtonNode(text: "+", identifier: "AddForce", size: 28)
+        forcesOptionsPane.addChild(forcesAdd)
+        forcesAdd.position = CGPointMake(25, -35)
+        
+        let forcesSubtract = FBButtonNode(text: "-", identifier: "SubtractForce", size: 28)
+        forcesOptionsPane.addChild(forcesSubtract)
+        forcesSubtract.position = CGPointMake(-25, -35)
+        
+        
+        
+        let massOptionPane = FBButtonNode(text: "Mass:", identifier: nil, size: 32)
+        options.addChild(massOptionPane)
+        massOptionPane.position = CGPointMake(0, -100)
+        
+        let massValue = FBButtonNode(text: "10 kg", identifier: nil, size: 24)
+        massOptionPane.addChild(massValue)
+        massValue.position = CGPointMake(0, -35)
+        massValue.name = "MassValueNode"
+        
+        let massIncrement = FBButtonNode(text: "+", identifier: "Mass++", size: 28)
+        massOptionPane.addChild(massIncrement)
+        massIncrement.position = CGPointMake(65, -35)
+        
+        let massDecrement = FBButtonNode(text: "-", identifier: "Mass--", size: 28)
+        massOptionPane.addChild(massDecrement)
+        massDecrement.position = CGPointMake(-65, -35)
+        
+        let massShiftU = FBButtonNode(text: ">", identifier: "Mass>>", size: 28)
+        massOptionPane.addChild(massShiftU)
+        massShiftU.position = CGPointMake(100, -35)
+        
+        let massShiftD = FBButtonNode(text: "<", identifier: "Mass<<", size: 28)
+        massOptionPane.addChild(massShiftD)
+        massShiftD.position = CGPointMake(-100, -35)
 
-
-        self.name = "Background"
-
+        
     }
 
     func showOptionPane() {
@@ -323,6 +363,34 @@ class OneBodyScene: SKScene {
                 if !forces.isEmpty(){
                     subtractForce()
                 }
+                
+            case "Mass++":
+                //Increments mass vaalue of node, changes label in option pane to refelct new value
+                let newMass = ++(self.childNodeWithName("Node")!.physicsBody!.mass)
+                (self.childNodeWithName("//MassValueNode") as FBButtonNode).buttonText!.text = "\(Int(newMass)) kg"
+                
+            case "Mass--":
+                //Same as above, but does not allow mass to go below 1 kg
+                let newMass = (self.childNodeWithName("Node")!.physicsBody!.mass) - 1
+                if newMass > 0 {
+                    (self.childNodeWithName("Node")!.physicsBody!.mass) = newMass
+                    (self.childNodeWithName("//MassValueNode") as FBButtonNode).buttonText!.text = "\(Int(newMass)) kg"
+                }
+                
+            case "Mass>>":
+                //Increments mass vaalue of node one magnitude, changes label in option pane to refelct new value
+                (self.childNodeWithName("Node")!.physicsBody!.mass) *= 10
+                let newMass = (self.childNodeWithName("Node")!.physicsBody!.mass)
+                (self.childNodeWithName("//MassValueNode") as FBButtonNode).buttonText!.text = "\(Int(newMass)) kg"
+                
+            case "Mass<<":
+                //Same as above, but does not allow mass to go below 1 kg
+                let newMass = Int((self.childNodeWithName("Node")!.physicsBody!.mass)/10)
+                if newMass >= 1 {
+                    (self.childNodeWithName("Node")!.physicsBody!.mass) = CGFloat(newMass)
+                    (self.childNodeWithName("//MassValueNode") as FBButtonNode).buttonText!.text = "\(newMass) kg"
+                }
+                
 
             default:
                 println("Nothing Touched")
@@ -339,6 +407,7 @@ class OneBodyScene: SKScene {
             
         }
     }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
