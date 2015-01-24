@@ -18,6 +18,7 @@ class OneBodyScene: SKScene {
     var isRunning = false
     let basePosition: CGPoint?
     var forces: Stack<Force> = Stack<Force>()
+    var v: Velocity;
 
     
     // set background to dark blue

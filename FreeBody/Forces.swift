@@ -97,7 +97,7 @@ class Vector{
     
     // return CGVector with Vector's properties
     func cgVector() -> CGVector{
-        return CGVector(dx: CGFloat(self.i * 20), dy: CGFloat(self.j * 20))
+        return CGVector(dx: CGFloat(self.i * 1000), dy: CGFloat(self.j * 1000))
     }
 }
 
@@ -129,7 +129,7 @@ class Velocity: Vector{
     func shapeNode(x: CGFloat, _ y: CGFloat) -> VectorNode{
         let color = FBColors.Green
         let tailWidth: CGFloat = CGFloat(6)
-        let headWidth: CGFloat = 2.5 * tailWidth
+        let headWidth: CGFloat = 2 * tailWidth
         
         let path: UIBezierPath = UIBezierPath.arrowPath(CGFloat(magnitude * 10), tailWidth: tailWidth, headWidth: headWidth)
         
