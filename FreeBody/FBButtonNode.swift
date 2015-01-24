@@ -15,8 +15,8 @@ class FBButtonNode: SKSpriteNode {
     }
 
     var buttonText:SKLabelNode?
-    private var buttonBackground: SKShapeNode?
-    private var isButton:Bool?
+    var buttonBackground: SKShapeNode?
+    var isButton:Bool?
 
     init(text:String, identifier:String?, size:CGFloat) {
         super.init()

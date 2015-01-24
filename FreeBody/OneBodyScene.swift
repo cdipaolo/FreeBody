@@ -18,6 +18,18 @@ class OneBodyScene: SKScene {
     var isRunning = false
     let basePosition: CGPoint?
     var forces: Stack<Force> = Stack<Force>()
+    var netForce : CGVector
+        {
+        get {
+            var xComponent : CGFloat = 0
+            var yComponent : CGFloat = 0
+            for force:Force in forces.data {
+                xComponent += CGFloat(force.i)
+                yComponent += CGFloat(force.j)
+            }
+            return CGVectorMake(xComponent, yComponent)
+        }
+    }
 
     
     // set background to dark blue
@@ -63,8 +75,10 @@ class OneBodyScene: SKScene {
         // TODO: make either 15/2 or 15. 10 looks kinda funky inbetween
         let nodeCircle = SKShapeNode(circleOfRadius: 10)
         nodeCircle.fillColor = FBColors.Red
-        nodeCircle.lineWidth = 0
+        nodeCircle.lineWidth = 1
+        nodeCircle.strokeColor = FBColors.Red
         nodeCircle.name = "Node"
+        nodeCircle.zPosition = 6 //cover anything under
         node.addChild(nodeCircle)
         
         let π = M_PI
@@ -156,6 +170,11 @@ class OneBodyScene: SKScene {
         let massShiftD = FBButtonNode(text: "<", identifier: "Mass<<", size: 28)
         massOptionPane.addChild(massShiftD)
         massShiftD.position = CGPointMake(-100, -35)
+        
+        let showNetForceBoolButton = FBBooleanButton(text: "Show Net Force", identifier: "showNetForce", size:24)
+        massOptionPane.addChild(showNetForceBoolButton)
+        showNetForceBoolButton.position = CGPointMake(0, -85)
+        
 
         
     }
@@ -250,11 +269,13 @@ class OneBodyScene: SKScene {
             
             self.forces.push(exampleForce)
         }
+        updateNetForce()
     }
     
     // subtract (pop) the most recently allocated force from the forces stack
     func subtractForce(){
         if let tmp: Force = forces.pop() { tmp.correspondingNode!.removeFromParent() }
+        updateNetForce()
     }
     
     // changes a force in both data and visual representation based on user moving touch
@@ -284,16 +305,37 @@ class OneBodyScene: SKScene {
             }
             
         }
+        updateNetForce()
         
         
+    }
+    
+    func updateNetForce(){
+        self.childNodeWithName("//NetForce")?.removeFromParent()
+        let netForceNode = Force(Double(netForce.dx), Double(netForce.dy))
+        println("Net force ----> x = \(netForce.dx)  y = \(netForce.dy)")
+        let node: VectorNode = (netForceNode.shapeNode(0, 0) as VectorNode)
+        node.name = "NetForce"
+        node.fillColor = FBColors.Orange
+        node.strokeColor = FBColors.Orange
+        
+        let angle: CGFloat = netForce.dx<0 ? CGFloat(netForceNode.angle() + M_PI) : CGFloat(netForceNode.angle())
+        
+        node.zRotation = angle
+        
+        self.childNodeWithName("Node")?.addChild(node)
+
     }
 
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
         let childOfSceneNodeTouched = nodeAtPoint(touch.locationInNode(self))
 
-        if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
-            (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(true)
+        if (childOfSceneNodeTouched.parent?.parent is FBBooleanButton) {
+            (childOfSceneNodeTouched.parent!.parent as FBBooleanButton).switchEnabled();
+        }
+        else if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
+            (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(true);
         }
     }
 
@@ -304,9 +346,11 @@ class OneBodyScene: SKScene {
 
 
         if (childOfMainSceneTouched !== nodeAtPoint(touch.locationInNode(self))) {
-            if (childOfMainSceneTouched.parent?.parent is FBButtonNode) {
-                (childOfMainSceneTouched.parent!.parent as FBButtonNode).setTouched(false)
-
+            if (childOfMainSceneTouched.parent?.parent is FBBooleanButton) {
+                (childOfMainSceneTouched.parent!.parent as FBBooleanButton).switchEnabled();
+            }
+            else if (childOfMainSceneTouched.parent?.parent is FBButtonNode) {
+                (childOfMainSceneTouched.parent!.parent as FBButtonNode).setTouched(false);
             }
         }
 
@@ -324,8 +368,10 @@ class OneBodyScene: SKScene {
         let touch = touches.anyObject() as UITouch
         let childOfSceneNodeTouched = nodeAtPoint(touch.locationInNode(self))
 
-        if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
-            (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(false)
+        if (childOfSceneNodeTouched.parent?.parent is FBBooleanButton) {
+        }
+        else if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
+            (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(false);
         }
 
         if (childOfSceneNodeTouched.name? != nil) {
@@ -390,7 +436,14 @@ class OneBodyScene: SKScene {
                     (self.childNodeWithName("Node")!.physicsBody!.mass) = CGFloat(newMass)
                     (self.childNodeWithName("//MassValueNode") as FBButtonNode).buttonText!.text = "\(newMass) kg"
                 }
-                
+            case "showNetForce":
+                if (childOfSceneNodeTouched.parent?.parent as FBBooleanButton).enabled {
+                    updateNetForce()
+                    println(self.forces.data)
+                }
+                else {
+                    self.childNodeWithName("//NetForce")?.removeFromParent()
+                }
 
             default:
                 println("Nothing Touched")

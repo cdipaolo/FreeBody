@@ -19,6 +19,7 @@
 		6BF48C551A48E4B500704E36 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BF48C531A48E4B500704E36 /* LaunchScreen.xib */; };
 		6BF48C611A48E4B500704E36 /* FreeBodyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF48C601A48E4B500704E36 /* FreeBodyTests.swift */; };
 		7A0985F51A53BB150064CFB8 /* FBButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0985F41A53BB150064CFB8 /* FBButtonNode.swift */; };
+		7A57F0C81A7421B60020E369 /* FBBooleanButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A57F0C71A7421B60020E369 /* FBBooleanButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		6BF48C5F1A48E4B500704E36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6BF48C601A48E4B500704E36 /* FreeBodyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeBodyTests.swift; sourceTree = "<group>"; };
 		7A0985F41A53BB150064CFB8 /* FBButtonNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBButtonNode.swift; sourceTree = "<group>"; };
+		7A57F0C71A7421B60020E369 /* FBBooleanButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBBooleanButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				6BE02C081A5359FF009C9383 /* Colors.swift */,
 				6BE02C061A534A65009C9383 /* TwoBodiesScene.swift */,
 				6BE02C041A534A33009C9383 /* OneBodyScene.swift */,
+				7A57F0C71A7421B60020E369 /* FBBooleanButton.swift */,
 				7A0985F41A53BB150064CFB8 /* FBButtonNode.swift */,
 				6B4709341A58F7B200A424CE /* Forces.swift */,
 				6BF48C4C1A48E4B500704E36 /* GameViewController.swift */,
@@ -232,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BF48C4D1A48E4B500704E36 /* GameViewController.swift in Sources */,
+				7A57F0C81A7421B60020E369 /* FBBooleanButton.swift in Sources */,
 				6B4709351A58F7B200A424CE /* Forces.swift in Sources */,
 				6BE02C031A533DB2009C9383 /* MainMenuScene.swift in Sources */,
 				6BE02C091A5359FF009C9383 /* Colors.swift in Sources */,
