@@ -311,7 +311,9 @@ class OneBodyScene: SKScene {
     }
     
     func updateNetForce(){
+        let shouldShowNetForce = (self.childNodeWithName("//showNetForce")?.parent?.parent as FBBooleanButton).enabled
         self.childNodeWithName("//NetForce")?.removeFromParent()
+        if (shouldShowNetForce){
         let netForceNode = Force(Double(netForce.dx), Double(netForce.dy))
         println("Net force ----> x = \(netForce.dx)  y = \(netForce.dy)")
         let node: VectorNode = (netForceNode.shapeNode(0, 0) as VectorNode)
@@ -324,6 +326,7 @@ class OneBodyScene: SKScene {
         node.zRotation = angle
         
         self.childNodeWithName("Node")?.addChild(node)
+        }
 
     }
 
@@ -437,13 +440,7 @@ class OneBodyScene: SKScene {
                     (self.childNodeWithName("//MassValueNode") as FBButtonNode).buttonText!.text = "\(newMass) kg"
                 }
             case "showNetForce":
-                if (childOfSceneNodeTouched.parent?.parent as FBBooleanButton).enabled {
-                    updateNetForce()
-                    println(self.forces.data)
-                }
-                else {
-                    self.childNodeWithName("//NetForce")?.removeFromParent()
-                }
+                updateNetForce()
 
             default:
                 println("Nothing Touched")
