@@ -30,6 +30,7 @@ class OneBodyScene: SKScene {
             return CGVectorMake(xComponent, yComponent)
         }
     }
+    var v: Velocity;
 
     
     // set background to dark blue
