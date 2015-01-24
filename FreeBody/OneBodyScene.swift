@@ -30,7 +30,8 @@ class OneBodyScene: SKScene {
             return CGVectorMake(xComponent, yComponent)
         }
     }
-    var v: Velocity;
+    var v: Velocity = Velocity(0,0)
+    var velocityIsShowing: Bool = false
 
     
     // set background to dark blue
@@ -118,6 +119,12 @@ class OneBodyScene: SKScene {
         addChild(stopButton)
         stopButton.position = CGPointMake(stopButton.frame.size.width/2+stopButton.frame.size.height/2, self.size.height-stopButton.frame.size.height)
         stopButton.hidden = true
+        
+        let velocity = v.shapeNode(0, 0)
+        velocity.name = "Velocity"
+        velocity.position = CGPointMake(0, node.frame.size.height * 0.75)
+        node.addChild(velocity)
+        
         
         setupOptionPane()
 
@@ -361,6 +368,8 @@ class OneBodyScene: SKScene {
         // if node touch, moved, is a force, change the force relative to the location of the touch
         if (childOfMainNodeTouched?.name? == "Force") {
             changeForce(childOfMainNodeTouched!, touch)
+        } else if (childOfMainNodeTouched?.name? == "Velocity") {
+           // changeVelocity()
         }
 
     }
