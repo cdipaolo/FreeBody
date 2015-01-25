@@ -28,7 +28,7 @@ class FBButtonNode: SKSpriteNode {
         buttonText!.fontSize = size
         buttonText!.verticalAlignmentMode = .Center
 
-        let buttonBoundRect = CGSizeMake(max(buttonText!.frame.width+10, 30), max(buttonText!.frame.height+10, 30))
+        let buttonBoundRect = CGSizeMake(max(buttonText!.frame.width+10, 30), max(buttonText!.fontSize, 30))
         buttonBackground = SKShapeNode(rectOfSize: buttonBoundRect)
         buttonBackground!.fillColor = FBColors.Brown
         buttonBackground!.strokeColor = FBColors.YellowBright
