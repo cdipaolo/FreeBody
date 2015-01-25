@@ -36,8 +36,11 @@ extension UIBezierPath {
 
 // implementation of a stack data structure to hold forces
 class Stack<T>{
+    //Dictionary to hold any values that can be labeled and need to be easily changed at runtime 
+    //(e.g "gravity" "normal" "friction")
     var namedData = [String: T]()
     
+    //Array implemented as a stack, used to hold arbitrary values with no "name".
     var data: Array<T> = []
     
     func items() -> Int{
@@ -104,8 +107,12 @@ class Vector{
 }
 
 class Force: Vector{
-    let LENGTH_PER_NEWTON = 10.0
-    let VALUE_PER_NEWTON = 75.0
+    //All forces are stored with their Newton values (eg the valuse 1 will be exactly 1 kg*m/s^2)
+    //however, spritekit physics is a little funky, so we scale those newtons up when actually applying the force
+    
+    let LENGTH_PER_NEWTON = 10.0 //Length arrow should be drawn per newton of force
+    let VALUE_PER_NEWTON = 75.0  //Amount to 'tell' the phydic sim each newton of force is
+    
     // creates SKShapeNode which is sized relative to a CGFrame
     func shapeNode(x: CGFloat, _  y: CGFloat) -> VectorNode{
         let color = FBColors.Red
