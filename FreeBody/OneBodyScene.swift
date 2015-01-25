@@ -396,7 +396,7 @@ class OneBodyScene: SKScene {
 
             case "Background":
                 // if options is visible, hide the options panel
-                if isOptionVisible{
+                if isOptionVisible && childNodeWithName("Node")?.nodeAtPoint(touch.locationInNode(childNodeWithName("Node"))).name != "Force"{
                     hideOptionPane()
                 }
 
