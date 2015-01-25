@@ -140,6 +140,10 @@ class Velocity: Vector{
         
         return shape
     }
+    // return CGVector with Vector's properties
+    override func cgVector() -> CGVector{
+        return CGVector(dx: CGFloat(self.i * 75), dy: CGFloat(self.j * 75))
+    }
 }
 
 
