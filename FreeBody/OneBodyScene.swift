@@ -31,7 +31,7 @@ class OneBodyScene: SKScene {
         }
     }
     var v: Velocity = Velocity(0,0)
-    var velocityIsShowing: Bool = false
+    var velocityIsNotShowing: Bool = true
 
     
     // set background to dark blue
@@ -123,6 +123,10 @@ class OneBodyScene: SKScene {
         let velocity = v.shapeNode(0, 0)
         velocity.name = "Velocity"
         velocity.position = CGPointMake(0, node.frame.size.height * 0.75)
+        self.v.correspondingNode = velocity
+        velocity.hidden = velocityIsNotShowing
+        node.physicsBody?.velocity = v.cgVector()
+        
         node.addChild(velocity)
         
         
@@ -183,6 +187,9 @@ class OneBodyScene: SKScene {
         massOptionPane.addChild(showNetForceBoolButton)
         showNetForceBoolButton.position = CGPointMake(0, -85)
         
+        let showVelocityButton = FBBooleanButton(text: "Show Velocity", identifier: "showVelocity", size:24)
+        massOptionPane.addChild(showVelocityButton)
+        showVelocityButton.position = CGPointMake(0, -135)
 
         
     }
@@ -243,6 +250,7 @@ class OneBodyScene: SKScene {
             startButton?.zPosition--
             stopButton!.hidden = false
             stopButton?.zPosition++
+        
         }
         else {
             // Physics is changed to not running, turn it off! Move node to center
@@ -252,6 +260,9 @@ class OneBodyScene: SKScene {
                 node.physicsBody?.dynamic = false
                 node.position = basePosition!
             }
+            
+            self.v = Velocity(0,0)
+            updateVelocity(self.v)
             
             stopButton!.hidden = true
             stopButton?.zPosition--
@@ -337,6 +348,58 @@ class OneBodyScene: SKScene {
         }
 
     }
+    
+    // changes a force in both data and visual representation based on user moving touch
+    func changeVelocity(node: SKNode,_ touch: UITouch){
+        let v = self.v.correspondingNode
+        let x = touch.locationInNode(node.parent).x - v!.position.x
+        let y = touch.locationInNode(node.parent).y - v!.position.y
+        
+        let i = x / 10
+        let j = y / 10
+        
+        if node is VectorNode{
+            let velocity = self.v
+            self.v.i = Double(i)
+            self.v.j = Double(j)
+            let movingObject = self.childNodeWithName("Node")
+            movingObject?.physicsBody?.velocity = self.v.cgVector()
+            
+            let position = node.position
+            
+            node.removeFromParent()
+            let angle: CGFloat = i<0 ? CGFloat(self.v.angle() + M_PI) : CGFloat(self.v.angle())
+            
+            let newNode: VectorNode = self.v.shapeNode(0,0)
+            newNode.position = position
+            newNode.zRotation = angle
+            newNode.name = "Velocity"
+            self.v.correspondingNode = newNode
+            
+            if let object = self.childNodeWithName("Node"){
+                object.addChild(newNode)
+            }
+        }
+    
+    }
+    
+    
+    func updateVelocity(vector: Velocity){
+        if let node = self.childNodeWithName("Node") {
+            if let velocityNode = node.childNodeWithName("Velocity") {
+                    println("velocityNode found")
+                    let newVelocityNode = vector.shapeNode(0, 0)
+                    newVelocityNode.position = velocityNode.position
+                    newVelocityNode.name = "Velocity"
+                
+                    newVelocityNode.zRotation = vector.i<0 ? CGFloat(vector.angle() + M_PI) : CGFloat(vector.angle())
+                    newVelocityNode.hidden = self.velocityIsNotShowing
+                
+                    velocityNode.removeFromParent()
+                    node.addChild(newVelocityNode)
+            }
+        }
+    }
 
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
@@ -372,7 +435,7 @@ class OneBodyScene: SKScene {
         if (childOfMainNodeTouched?.name? == "Force") {
             changeForce(childOfMainNodeTouched!, touch)
         } else if (childOfMainNodeTouched?.name? == "Velocity") {
-           // changeVelocity()
+           changeVelocity(childOfMainNodeTouched!, touch)
         }
 
     }
@@ -451,6 +514,11 @@ class OneBodyScene: SKScene {
                 }
             case "showNetForce":
                 updateNetForce()
+                
+            case "showVelocity":
+                let velocity = self.v.correspondingNode as SKShapeNode?
+                velocityIsNotShowing = !velocityIsNotShowing
+                velocity?.hidden = velocityIsNotShowing
 
             default:
                 println("Nothing Touched")
@@ -464,7 +532,13 @@ class OneBodyScene: SKScene {
             for force:Force in forces.data {
                 node!.physicsBody?.applyForce(force.cgVector())
             }
+            let i: CGFloat? = node?.physicsBody?.velocity.dx
+            let j: CGFloat? = node?.physicsBody?.velocity.dy
             
+            self.v.i = Double(i!) / 100
+            self.v.j = Double(j!) / 100
+            
+            updateVelocity(self.v)
         }
     }
     
