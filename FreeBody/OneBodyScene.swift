@@ -263,9 +263,22 @@ class OneBodyScene: SKScene {
                 node.physicsBody?.dynamic = false
                 node.position = basePosition!
             }
-            
-            self.v = Velocity(0,0)
-            updateVelocity(self.v)
+
+            let node = self.childNodeWithName("Node")!;
+
+            let oldVelocity = node.childNodeWithName("Velocity")
+            oldVelocity!.removeFromParent()
+
+            self.v.i = 0.0
+            self.v.j = 0.0
+            let velocity = v.shapeNode(0, 0)
+            velocity.name = "Velocity"
+            velocity.position = CGPointMake(0, node.frame.size.height * 0.75)
+            self.v.correspondingNode = velocity
+            velocity.hidden = velocityIsNotShowing
+            node.physicsBody?.velocity = v.cgVector()
+
+            node.addChild(velocity)
             
             stopButton!.hidden = true
             stopButton?.zPosition--
