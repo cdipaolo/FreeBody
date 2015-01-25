@@ -389,7 +389,7 @@ class OneBodyScene: SKScene {
     func updateVelocity(vector: Velocity){
         if let node = self.childNodeWithName("Node") {
             if let velocityNode = node.childNodeWithName("Velocity") {
-                    println("velocityNode found")
+                
                     let newVelocityNode = vector.shapeNode(0, 0)
                     newVelocityNode.position = velocityNode.position
                     newVelocityNode.name = "Velocity"
