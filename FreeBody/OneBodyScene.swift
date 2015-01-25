@@ -250,6 +250,9 @@ class OneBodyScene: SKScene {
             startButton?.zPosition--
             stopButton!.hidden = false
             stopButton?.zPosition++
+
+            let node = self.childNodeWithName("Node")
+            node?.physicsBody?.velocity = self.v.cgVector()
         
         }
         else {
@@ -363,7 +366,6 @@ class OneBodyScene: SKScene {
             self.v.i = Double(i)
             self.v.j = Double(j)
             let movingObject = self.childNodeWithName("Node")
-            movingObject?.physicsBody?.velocity = self.v.cgVector()
             
             let position = node.position
             
