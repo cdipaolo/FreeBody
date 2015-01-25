@@ -429,7 +429,7 @@ class OneBodyScene: SKScene {
         }
 
         let mainNode = self.childNodeWithName("Node")
-        let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.locationInNode(mainNode))
+        let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.previousLocationInNode(mainNode))
         
         // if node touch, moved, is a force, change the force relative to the location of the touch
         if (childOfMainNodeTouched?.name? == "Force") {
