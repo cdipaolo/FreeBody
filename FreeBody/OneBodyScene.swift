@@ -289,6 +289,7 @@ class OneBodyScene: SKScene {
             let node: VectorNode = (exampleForce.shapeNode(0, 0) as VectorNode)
             exampleForce.correspondingNode = node
             node.name = "Force"
+            node.childNodeWithName("ForceLabel")?.hidden = !magnitudesVisible
             object.addChild(node)
             println(self.forces.data)
             
@@ -328,7 +329,8 @@ class OneBodyScene: SKScene {
             let newNode: VectorNode = (force! as Force).shapeNode(0,0)
             newNode.runAction(rotate)
             force?.correspondingNode = newNode
-            
+            newNode.childNodeWithName("ForceLabel")?.hidden = !magnitudesVisible
+
             if let object = self.childNodeWithName("Node"){
                 object.addChild(newNode)
             }
@@ -366,6 +368,7 @@ class OneBodyScene: SKScene {
             let netForceNode = Force(Double(netForce.dx), Double(netForce.dy))
             let node: VectorNode = (netForceNode.shapeNode(0, 0) as VectorNode)
             node.name = "NetForce"
+            node.childNodeWithName("ForceLabel")?.hidden = !magnitudesVisible
             node.fillColor = FBColors.Orange
             node.strokeColor = FBColors.Orange
             
@@ -462,7 +465,7 @@ class OneBodyScene: SKScene {
         // if node touch, moved, is a force, change the force relative to the location of the touch
         if (childOfMainNodeTouched?.name? == "Force") {
             changeForce(childOfMainNodeTouched!, touch)
-        } else if (childOfMainNodeTouched?.name? == "Velocity") {
+        } else if (childOfMainNodeTouched?.name? == "Velocity" && !velocityIsNotShowing) {
             changeVelocity(childOfMainNodeTouched!, touch)
         }
         
