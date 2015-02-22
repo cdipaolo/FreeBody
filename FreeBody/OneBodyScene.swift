@@ -26,6 +26,11 @@ class OneBodyScene: SKScene {
     var gravityEnabled = true
     
     var magnitudesVisible = false
+
+    var movingIncline = false
+
+    var onIncline = false
+    var amountOfIncline:CGFloat = 0
     
     
     // set background to dark blue
@@ -135,9 +140,9 @@ class OneBodyScene: SKScene {
         let forcesSubtract = FBButtonNode(text: "-", identifier: "SubtractForce", size: 28)
         forcesOptionsPane.addChild(forcesSubtract)
         forcesSubtract.position = CGPointMake(-25, -35)
-        
-        
-        
+
+
+
         let massOptionPane = FBButtonNode(text: "Mass:", identifier: nil, size: 32)
         options.addChild(massOptionPane)
         massOptionPane.position = CGPointMake(0, -100)
@@ -179,7 +184,10 @@ class OneBodyScene: SKScene {
         let showValuesButton = FBBooleanButton(text: "Show Magnitudes", identifier: "showMagnitudes", size: 24)
         showValuesButton.position = CGPointMake(0, -350)
         options.addChild(showValuesButton)
-        
+
+        let onInclineButton = FBBooleanButton(text: "Place On Incline", identifier: "showIncline", size: 24)
+        onInclineButton.position = CGPointMake(0, 150)
+        options.addChild(onInclineButton)
         
         
     }
@@ -431,7 +439,39 @@ class OneBodyScene: SKScene {
             }
         }
     }
-    
+
+    func setInclineAngle(touch : UITouch) {
+        let deltaY = touch.locationInNode(self.scene).y - touch.previousLocationInNode(self.scene).y
+        let scale = (touch.locationInNode(self.scene).x - self.size.width/2) / self.size.width
+        amountOfIncline += deltaY * scale //think of like cross product. at center can't turn, etc
+        let inc = self.childNodeWithName("incline") as SKShapeNode
+
+        let newPath = UIBezierPath()
+        newPath.moveToPoint(CGPointZero);
+        newPath.addLineToPoint(CGPointMake(self.size.width, 0))
+        newPath.addLineToPoint(CGPointMake(self.size.width, self.size.height/2 - self.size.width/8 + amountOfIncline))
+        newPath.addLineToPoint(CGPointMake(0, self.size.height/2 - self.size.width/8 - amountOfIncline))
+        newPath.closePath()
+
+
+        inc.path = newPath.CGPath
+    }
+
+    func setInclinePresence(present : Bool) {
+        if (present) {
+            let boxSize = self.size.width/4
+            let incline = SKShapeNode(rect: CGRect(x: -self.size.width/3, y: 0, width: self.size.width, height: self.size.height/2-boxSize/2))
+            incline.fillColor = FBColors.OrangeBright
+            incline.strokeColor = UIColor.clearColor()
+            incline.name = "incline"
+            incline.zPosition = -1;
+            self.addChild(incline)
+        } else {
+            self.childNodeWithName("incline")?.removeFromParent()
+        }
+
+    }
+
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         let touch = touches.anyObject() as UITouch
         let childOfSceneNodeTouched = nodeAtPoint(touch.locationInNode(self))
@@ -441,6 +481,10 @@ class OneBodyScene: SKScene {
         }
         else if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
             (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(true);
+        }
+
+        if childOfSceneNodeTouched.name == "incline" {
+            movingIncline = true
         }
     }
     
@@ -467,6 +511,10 @@ class OneBodyScene: SKScene {
             changeForce(childOfMainNodeTouched!, touch)
         } else if (childOfMainNodeTouched?.name? == "Velocity" && !velocityIsNotShowing) {
             changeVelocity(childOfMainNodeTouched!, touch)
+        }
+
+        if movingIncline {
+            setInclineAngle(touch)
         }
         
     }
@@ -575,6 +623,10 @@ class OneBodyScene: SKScene {
                     force.correspondingNode?.childNodeWithName("ForceLabel")?.hidden = !magnitudesVisible
                 }
                 self.childNodeWithName("//NetForce")?.childNodeWithName("ForceLabel")?.hidden = !magnitudesVisible
+
+            case "showIncline":
+                onIncline = !onIncline
+                setInclinePresence(onIncline)
                 
                 
             default:
