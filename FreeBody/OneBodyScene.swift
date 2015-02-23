@@ -196,7 +196,7 @@ class OneBodyScene: SKScene {
         if !isOptionVisible {
             for child in children {
                 let name = (child as SKNode).name
-                if (name == "Node" || (child as SKNode).parent?.name == "Node") {
+                if (name == "Node" || (child as SKNode).parent?.name == "Node" || name == "incline") {
                     // move central node and children (force arrows in future maybe) to be in new center
                     (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(-self.frame.width/6, 0), duration: 0.25))
                 } else if (name == "MainMenu" ) {
@@ -216,7 +216,7 @@ class OneBodyScene: SKScene {
         if isOptionVisible {
             for child in children {
                 let name = (child as SKNode).name
-                if (name == "Node" || (child as SKNode).parent?.name == "Node") {
+                if (name == "Node" || (child as SKNode).parent?.name == "Node" || name == "incline") {
                     // move central node and children (force arrows in future maybe) to be in new center
                     (child as SKNode).runAction(SKAction.moveBy(CGVectorMake(+self.frame.width/6, 0), duration: 0.25))
                 } else if (name == "MainMenu" ) {
@@ -442,32 +442,49 @@ class OneBodyScene: SKScene {
 
     func setInclineAngle(touch : UITouch) {
         let deltaY = touch.locationInNode(self.scene).y - touch.previousLocationInNode(self.scene).y
-        let scale = (touch.locationInNode(self.scene).x - self.size.width/2) / self.size.width
-        amountOfIncline += deltaY * scale //think of like cross product. at center can't turn, etc
-        let inc = self.childNodeWithName("incline") as SKShapeNode
+        var scale:CGFloat = 0;
+        if (isOptionVisible) {
+            scale = (touch.locationInNode(self.scene).x - (self.size.width/3)) / (2*self.size.width/3)
+        } else {
+            scale = (touch.locationInNode(self.scene).x - self.size.width/2) / self.size.width
+        }
+        amountOfIncline += deltaY * scale * 3 //think of like cross product. at center can't turn, etc
+                                              //3 corresponds to delay in sim. need new val with actual ipad
+        let inc = self.childNodeWithName("//incline") as SKShapeNode
 
-        let newPath = UIBezierPath()
-        newPath.moveToPoint(CGPointZero);
-        newPath.addLineToPoint(CGPointMake(self.size.width, 0))
-        newPath.addLineToPoint(CGPointMake(self.size.width, self.size.height/2 - self.size.width/8 + amountOfIncline))
-        newPath.addLineToPoint(CGPointMake(0, self.size.height/2 - self.size.width/8 - amountOfIncline))
-        newPath.closePath()
+        let path = UIBezierPath()
+        path.moveToPoint(CGPointMake(0, -self.size.width/8))
+        path.addLineToPoint(CGPointMake(+self.size.width/2, -self.size.width/8 + amountOfIncline))
+        path.addLineToPoint(CGPointMake(+self.size.width/2, -self.size.height/2))
+        path.addLineToPoint(CGPointMake(-self.size.width/2, -self.size.height/2))
+        path.addLineToPoint(CGPointMake(-self.size.width/2, -self.size.width/8 - amountOfIncline))
+        path.closePath()
 
 
-        inc.path = newPath.CGPath
+        inc.path = path.CGPath
+        inc.position = CGPointZero
     }
 
     func setInclinePresence(present : Bool) {
         if (present) {
             let boxSize = self.size.width/4
-            let incline = SKShapeNode(rect: CGRect(x: -self.size.width/3, y: 0, width: self.size.width, height: self.size.height/2-boxSize/2))
+            let incline = SKShapeNode()
+            let path = UIBezierPath()
+            path.moveToPoint(CGPointMake(0, -self.size.width/8))
+            path.addLineToPoint(CGPointMake(+self.size.width/2, -self.size.width/8))
+            path.addLineToPoint(CGPointMake(+self.size.width/2, -self.size.height/2))
+            path.addLineToPoint(CGPointMake(-self.size.width/2, -self.size.height/2))
+            path.addLineToPoint(CGPointMake(-self.size.width/2, -self.size.width/8))
+            path.closePath()
+            
+            incline.path = path.CGPath
             incline.fillColor = FBColors.OrangeBright
-            incline.strokeColor = UIColor.clearColor()
+            incline.strokeColor = FBColors.OrangeBright
             incline.name = "incline"
             incline.zPosition = -1;
-            self.addChild(incline)
+            self.childNodeWithName("Node")!.addChild(incline)
         } else {
-            self.childNodeWithName("incline")?.removeFromParent()
+            self.childNodeWithName("//incline")?.removeFromParent()
         }
 
     }
@@ -482,8 +499,10 @@ class OneBodyScene: SKScene {
         else if (childOfSceneNodeTouched.parent?.parent is FBButtonNode) {
             (childOfSceneNodeTouched.parent!.parent as FBButtonNode).setTouched(true);
         }
-
-        if childOfSceneNodeTouched.name == "incline" {
+        
+        let mainNode = self.childNodeWithName("Node")
+        let childOfMainNodeTouched = mainNode?.nodeAtPoint(touch.previousLocationInNode(mainNode))
+        if (childOfMainNodeTouched?.name != nil && childOfMainNodeTouched?.name! == "incline") {
             movingIncline = true
         }
     }
@@ -539,7 +558,8 @@ class OneBodyScene: SKScene {
                 
             case "Background":
                 // if options is visible, hide the options panel
-                if isOptionVisible && childNodeWithName("Node")?.nodeAtPoint(touch.locationInNode(childNodeWithName("Node"))).name != "Force"{
+                if isOptionVisible && childNodeWithName("Node")?.nodeAtPoint(touch.locationInNode(childNodeWithName("Node"))).name != "Force" &&
+                                      childNodeWithName("Node")?.nodeAtPoint(touch.locationInNode(childNodeWithName("Node"))).name != "incline"{
                     hideOptionPane()
                 }
                 
